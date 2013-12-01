@@ -1,9 +1,9 @@
-package com.xrigau.espressodemo;
+package com.xrigau.espressodemo.presentation;
 
 import android.app.Activity;
 import android.os.Bundle;
 
-import com.xrigau.espressodemo.core.Something;
+import com.xrigau.espressodemo.R;
 
 public class MainActivity extends Activity {
 
@@ -11,7 +11,5 @@ public class MainActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Something a = new Something();
-        a.toString();
     }
 }

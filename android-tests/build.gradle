@@ -3,14 +3,12 @@ evaluationDependsOn(':app')
 apply plugin: 'java'
 
 dependencies {
-    compile project(':app')
-
-    testCompile 'junit:junit:4.+'
-    testCompile 'org.mockito:mockito-all:1.8.+'
-    testCompile 'org.robolectric:robolectric:2.+'
-
-    testCompile project(':app').android.applicationVariants.toList().first().javaCompile.outputs.files
-    testCompile files(project(':app').plugins.findPlugin("android").runtimeJarList)
+    // All these dependencies should be testCompile, but AS fails and thinks our test folder is a source folder and wouldn't find any class
+    compile project(':app').android.applicationVariants.toList().first().javaCompile.outputs.files
+    compile files(project(':app').plugins.findPlugin("android").runtimeJarList)
+    compile 'junit:junit:4.+'
+    compile 'org.mockito:mockito-all:1.8.+'
+    compile 'org.robolectric:robolectric:2.+'
 }
 
 sourceSets {

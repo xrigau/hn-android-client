@@ -10,11 +10,12 @@ import org.robolectric.RobolectricTestRunner;
 import static org.junit.Assert.assertNotNull;
 
 @RunWith(RobolectricTestRunner.class)
-public class SomeRobolectricTest {
+public class DummyViewForTestShould {
 
     @Test
-    public void testSomething() {
+    public void workWithRobolectricProperly() {
+        // Test that Robolectric works, nothing else
         assertNotNull(new TextView(Robolectric.application));
-        assertNotNull(new SomethingElse(Robolectric.application));
+        assertNotNull(new DummyViewForTest(Robolectric.application));
     }
 }
