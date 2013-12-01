@@ -50,11 +50,11 @@ public class Post {
         return user;
     }
 
-    public String getTime_ago() {
+    public String getTime() {
         return time_ago;
     }
 
-    public int getComments_count() {
+    public int getCommentCount() {
         return comments_count;
     }
 

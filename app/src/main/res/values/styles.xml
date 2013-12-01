@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+  <style name="HNTheme" parent="android:Theme.Holo.Light.DarkActionBar">
+    <item name="android:actionBarStyle">@style/HNActionBar</item>
+  </style>
+
+  <style name="HNActionBar" parent="android:Widget.Holo.Light.ActionBar.Solid">
+    <item name="android:background">#FF8800</item>
+    <item name="android:titleTextStyle">@style/HNActionBarText</item>
+  </style>
+
+  <style name="HNActionBarText" parent="@android:style/TextAppearance.Holo.Widget.ActionBar.Title">
+    <item name="android:fontFamily">sans-serif-condensed</item>
+    <item name="android:textColor">@android:color/white</item>
+    <item name="android:shadowColor">#141414</item>
+    <item name="android:shadowDx">1</item>
+    <item name="android:shadowDy">1</item>
+    <item name="android:shadowRadius">1</item>
+  </style>
+</resources>

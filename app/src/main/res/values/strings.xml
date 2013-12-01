@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">android-espresso-demo</string>
+  <string name="app_name">android-espresso-demo</string>
+  <string name="loading">Loading…</string>
+  <string name="one_comment">%1$d comment</string>
+  <string name="many_comments">%1$d comments</string>
 
 </resources>
