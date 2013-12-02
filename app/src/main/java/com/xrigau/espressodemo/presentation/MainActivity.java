@@ -1,70 +1,37 @@
 package com.xrigau.espressodemo.presentation;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ListView;
-import android.widget.Toast;
+import android.widget.Button;
 
 import com.xrigau.espressodemo.R;
-import com.xrigau.espressodemo.core.model.PostList;
-import com.xrigau.espressodemo.loader.LoaderListener;
-import com.xrigau.espressodemo.loader.PostsTaskLoaderCallbacks;
-import com.xrigau.espressodemo.presentation.adapter.EmptyAdapter;
-import com.xrigau.espressodemo.presentation.adapter.PostsAdapter;
 
-public class MainActivity extends Activity implements LoaderListener<PostList>, AdapterView.OnItemClickListener {
+import java.util.Random;
 
-    private static final int NEWS_LOADER = 1;
+public class MainActivity extends Activity {
 
-    private PostsTaskLoaderCallbacks postsTaskLoaderCallbacks;
-
-    private ListView list;
-    private View loading;
+    private static final int VISITOR_NUMBER = new Random().nextInt(Integer.MAX_VALUE);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        findViews();
         setUpViews();
-        postsTaskLoaderCallbacks = new PostsTaskLoaderCallbacks(this, this);
-
-        if (savedInstanceState != null) {
-            getLoaderManager().restartLoader(NEWS_LOADER, Bundle.EMPTY, postsTaskLoaderCallbacks).forceLoad();
-            return;
-        }
-
-        getLoaderManager().initLoader(NEWS_LOADER, Bundle.EMPTY, postsTaskLoaderCallbacks).forceLoad();
-    }
-
-    private void findViews() {
-        list = (ListView) findViewById(R.id.list);
-        loading = findViewById(R.id.loading);
     }
 
     private void setUpViews() {
-        list.setOnItemClickListener(this);
+        Button button = (Button) findViewById(R.id.hello_visitor);
+        button.setText(getString(R.string.hello_visitor, VISITOR_NUMBER));
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, VisitorActivity.class)
+                        .putExtra(VisitorActivity.VISITOR_ID, VISITOR_NUMBER);
+                startActivity(intent);
+            }
+        });
     }
 
-    @Override
-    public void onLoadStarted() {
-        list.setVisibility(View.GONE);
-        loading.setVisibility(View.VISIBLE);
-        list.setAdapter(new EmptyAdapter());
-    }
-
-    @Override
-    public void onLoadFinished(PostList posts) {
-        list.setAdapter(new PostsAdapter(posts, LayoutInflater.from(this), getResources()));
-        list.setVisibility(View.VISIBLE);
-        loading.setVisibility(View.GONE);
-    }
-
-    @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        Toast.makeText(this, "Wohooo clicked on some item!", 0).show();
-    }
 }

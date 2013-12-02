@@ -1,32 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
   android:layout_width="match_parent"
-  android:layout_height="match_parent">
+  android:layout_height="match_parent"
+  android:gravity="center_vertical"
+  android:orientation="vertical">
 
-  <ListView
-    android:id="@+id/list"
+  <Button
+    android:id="@+id/button_with_id"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" />
-
-  <LinearLayout
-    android:id="@+id/loading"
-    android:visibility="gone"
-    android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:layout_gravity="center"
-    android:gravity="center_horizontal"
-    android:orientation="vertical">
+    android:text="@string/button_with_id" />
 
-    <ProgressBar
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:indeterminate="true" />
+  <Button
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:text="@string/simple_button" />
 
-    <TextView
-      android:textAppearance="?android:textAppearanceMedium"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:layout_marginTop="24dp"
-      android:text="@string/loading" />
-  </LinearLayout>
-</FrameLayout>
+  <ImageButton
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@android:drawable/alert_dark_frame"
+    android:src="@android:drawable/ic_menu_gallery" />
+
+  <Button
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:text="@string/text_cd"
+    android:contentDescription="Best content description ever" />
+
+  <Button
+    android:id="@+id/hello_visitor"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content" />
+
+</LinearLayout>

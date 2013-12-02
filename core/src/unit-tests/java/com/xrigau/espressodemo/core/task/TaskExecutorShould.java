@@ -1,5 +1,6 @@
 package com.xrigau.espressodemo.core.task;
 
+import com.xrigau.espressodemo.core.debug.MockClient;
 import com.xrigau.espressodemo.core.model.PostList;
 import com.xrigau.espressodemo.core.service.Services;
 
@@ -19,7 +20,7 @@ public class TaskExecutorShould {
     public void executeNewsRequest() {
         NewsTask task = mock(NewsTask.class);
 
-        new TaskExecutor().execute(task);
+        new TaskExecutor(new MockClient()).execute(task);
 
         verify(task).execute(any(Services.class));
     }
@@ -28,7 +29,7 @@ public class TaskExecutorShould {
     public void getsNewsList() {
         NewsTask task = new NewsTask();
 
-        PostList posts = new TaskExecutor().execute(task);
+        PostList posts = new TaskExecutor(new MockClient()).execute(task);
 
         assertThat(posts.size(), is(not(0)));
         assertNotNull(posts.get(0));

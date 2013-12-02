@@ -6,6 +6,10 @@ buildscript {
 
 apply plugin: 'android'
 
+dependencies {
+    compile project(":core")
+}
+
 android {
     compileSdkVersion 19
     buildToolsVersion "19.0.0"
@@ -13,9 +17,65 @@ android {
     defaultConfig {
         minSdkVersion 14
         targetSdkVersion 19
+        testInstrumentationRunner "com.google.android.apps.common.testing.testrunner.GoogleInstrumentationTestRunner"
+
+        buildConfig """
+          public static final retrofit.client.Client DEFAULT_HTTP_CLIENT = new retrofit.client.UrlConnectionClient();
+          public static final retrofit.client.Client MOCK_HTTP_CLIENT = new com.xrigau.espressodemo.core.debug.MockClient();
+        """
+    }
+
+    deviceProvider new AwesomeDeviceProvider(project.plugins.findPlugin('android').getSdkParser())
+    testBuildType "mockServer"
+
+    buildTypes {
+        release {
+            debuggable false
+            jniDebugBuild false
+            signingConfig signingConfigs.debug // TODO create a release config
+
+            buildConfig "public static final retrofit.client.Client HTTP_CLIENT = DEFAULT_HTTP_CLIENT;\n"
+        }
+        debug {
+            debuggable true
+            jniDebugBuild true
+            signingConfig signingConfigs.debug
+
+            buildConfig "public static final retrofit.client.Client HTTP_CLIENT = DEFAULT_HTTP_CLIENT;\n"
+        }
+        mockServer {
+            dependencies {
+                compile "com.google.android:android-espresso-bundled:1.0.0-SNAPSHOT"
+            }
+
+            debuggable true
+            jniDebugBuild true
+            signingConfig signingConfigs.debug
+
+            buildConfig "public static final retrofit.client.Client HTTP_CLIENT = MOCK_HTTP_CLIENT;\n"
+        }
     }
 }
 
-dependencies {
-    compile project(":core")
+class AwesomeDeviceProvider extends com.android.builder.testing.ConnectedDeviceProvider {
+    AwesomeDeviceProvider(com.android.builder.SdkParser sdkParser) {
+        super(sdkParser)
+    }
+
+    public String getName() {
+        return "genymotion" // Run with 'gradle genymotionInstrumentTest'
+    }
+
+    public List<? extends com.android.builder.testing.api.DeviceConnector> getDevices() {
+        List localDevices = super.getDevices()
+        def matchingDevices = localDevices.grep {
+            it.getApiLevel() > 16 &&
+                    it.iDevice.getProperty("ro.product.manufacturer") == 'Genymotion'
+        }
+
+        if (matchingDevices.size() == 0) {
+            throw new IllegalArgumentException("Couldn't find any connected device that matches [${getName()}] provider.")
+        }
+        matchingDevices
+    }
 }
