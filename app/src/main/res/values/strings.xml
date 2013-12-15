@@ -1,14 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-  <string name="app_name">android-espresso-demo</string>
-
-  <string name="button_with_id">I haz id</string>
-  <string name="simple_button">Simple button</string>
-  <string name="text_cd">This one has content description</string>
-  <string name="hello_visitor">Hello visitor %1$d</string>
-
-  <string name="awesome_visitor">Visitor %1$d is awesome!</string>
+  <string name="app_name">AHN!</string>
 
   <string name="post_list_title">Latest news</string>
   <string name="loading">Loading…</string>

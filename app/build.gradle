@@ -21,7 +21,7 @@ android {
 
         buildConfig """
           public static final retrofit.client.Client DEFAULT_HTTP_CLIENT = new retrofit.client.UrlConnectionClient();
-          public static final retrofit.client.Client MOCK_HTTP_CLIENT = new com.xrigau.espressodemo.core.debug.MockClient();
+          public static final retrofit.client.Client MOCK_HTTP_CLIENT = new com.xrigau.hnandroid.core.debug.MockClient();
         """
     }
 
