@@ -55,19 +55,13 @@ public class NewsAdapter extends BaseAdapter {
     private void populateView(ViewHolder holder, News news) {
         holder.title.setText(news.getTitle());
         holder.domain.setText(news.getDomain());
-        updateCommentsVuew(holder, news.getComments());
+        updateCommentsView(holder, news.getComments());
         holder.time.setText(news.getTimestamp());
     }
 
-    private void updateCommentsVuew(ViewHolder holder, int comments) {
-        if (comments == 0) {
-            holder.comments.setVisibility(View.GONE);
-            return;
-        }
-        int stringResId = comments == 1 ? R.string.one_comment : R.string.many_comments;
-        holder.comments.setText(resources.getString(stringResId, comments));
-
-        holder.comments.setVisibility(View.VISIBLE);
+    private void updateCommentsView(ViewHolder holder, int comments) {
+        String formatted = resources.getQuantityString(R.plurals.comments, comments, comments);
+        holder.comments.setText(formatted);
     }
 
     private static class ViewHolder {
