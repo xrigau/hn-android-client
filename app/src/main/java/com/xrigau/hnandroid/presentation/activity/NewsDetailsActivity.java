@@ -1,11 +1,10 @@
-package com.xrigau.hnandroid.presentation;
+package com.xrigau.hnandroid.presentation.activity;
 
-import android.app.Activity;
 import android.os.Bundle;
 
 import com.xrigau.hnandroid.R;
 
-public class NewsDetailsActivity extends Activity {
+public class NewsDetailsActivity extends HNActivity {
 
     public static final String EXTRA_NEWS = "com.xrigau.hnandroid.EXTRA_NEWS";
 

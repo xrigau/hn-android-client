@@ -5,7 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 
 import com.xrigau.hnandroid.core.model.News;
-import com.xrigau.hnandroid.presentation.NewsDetailsActivity;
+import com.xrigau.hnandroid.presentation.activity.NewsDetailsActivity;
 
 public class Navigator {
 

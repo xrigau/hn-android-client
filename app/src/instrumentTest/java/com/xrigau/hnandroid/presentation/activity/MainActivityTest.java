@@ -1,4 +1,4 @@
-package com.xrigau.hnandroid.presentation;
+package com.xrigau.hnandroid.presentation.activity;
 
 import android.test.ActivityInstrumentationTestCase2;
 
