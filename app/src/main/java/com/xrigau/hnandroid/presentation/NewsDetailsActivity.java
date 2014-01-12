@@ -7,6 +7,8 @@ import com.xrigau.hnandroid.R;
 
 public class NewsDetailsActivity extends Activity {
 
+    public static final String EXTRA_NEWS = "com.xrigau.hnandroid.EXTRA_NEWS";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

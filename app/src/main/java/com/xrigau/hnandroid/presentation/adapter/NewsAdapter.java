@@ -39,6 +39,11 @@ public class NewsAdapter extends BaseAdapter {
     }
 
     @Override
+    public boolean hasStableIds() {
+        return true;
+    }
+
+    @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         if (convertView == null) {
             convertView = inflater.inflate(R.layout.news_list_item, parent, false);

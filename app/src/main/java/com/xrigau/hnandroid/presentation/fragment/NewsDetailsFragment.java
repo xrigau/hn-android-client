@@ -5,43 +5,36 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.xrigau.hnandroid.R;
-import com.xrigau.hnandroid.core.model.NewsResponse;
-import com.xrigau.hnandroid.core.task.NewsTask;
+import com.xrigau.hnandroid.core.model.News;
+import com.xrigau.hnandroid.core.model.Summary;
 import com.xrigau.hnandroid.loader.LoaderListener;
-import com.xrigau.hnandroid.loader.NewsTaskLoaderCallbacks;
-import com.xrigau.hnandroid.presentation.adapter.EmptyAdapter;
-import com.xrigau.hnandroid.presentation.adapter.NewsAdapter;
+import com.xrigau.hnandroid.loader.SummaryTaskLoaderCallbacks;
+import com.xrigau.hnandroid.presentation.NewsDetailsActivity;
 
-public class NewsDetailsFragment extends Fragment implements LoaderListener<NewsResponse>, AdapterView.OnItemClickListener {
+public class NewsDetailsFragment extends Fragment implements LoaderListener<Summary> {
 
-    private static final int NEWS_LOADER_ID = 1;
+    private static final int SUMMARY_LOADER_ID = 2;
 
-    private NewsTaskLoaderCallbacks newsTaskLoaderCallbacks;
-    private String currentPage;
+    private SummaryTaskLoaderCallbacks summaryTaskLoaderCallbacks;
+    private News news;
 
-    private ListView list;
+    private TextView summary;
     private View loading;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View root = inflater.inflate(R.layout.fragment_news_list, container, false);
+        View root = inflater.inflate(R.layout.fragment_news_summary, container, false);
         findViews(root);
-        setUpViews();
         return root;
     }
 
     private void findViews(View root) {
-        list = (ListView) root.findViewById(R.id.list);
+        summary = (TextView) root.findViewById(R.id.summary);
         loading = root.findViewById(R.id.loading);
-    }
-
-    private void setUpViews() {
-        list.setOnItemClickListener(this);
     }
 
     @Override
@@ -49,47 +42,53 @@ public class NewsDetailsFragment extends Fragment implements LoaderListener<News
         super.onActivityCreated(savedInstanceState);
         restoreState(savedInstanceState);
 
-        newsTaskLoaderCallbacks = new NewsTaskLoaderCallbacks(getActivity(), this);
+        summaryTaskLoaderCallbacks = new SummaryTaskLoaderCallbacks(getActivity(), this);
 
-        getLoaderManager().initLoader(NEWS_LOADER_ID, getLoaderBundle(), newsTaskLoaderCallbacks).forceLoad();
+        getLoaderManager().initLoader(SUMMARY_LOADER_ID, getLoaderBundle(), summaryTaskLoaderCallbacks).forceLoad();
     }
 
     private void restoreState(Bundle savedInstanceState) {
-        if (savedInstanceState == null) {
-            return;
+        if (savedInstanceState != null) {
+            news = (News) savedInstanceState.getSerializable(NewsDetailsActivity.EXTRA_NEWS);
+        } else if (getActivity().getIntent().hasExtra(NewsDetailsActivity.EXTRA_NEWS)) {
+            news = (News) getActivity().getIntent().getSerializableExtra(NewsDetailsActivity.EXTRA_NEWS);
         }
-        currentPage = savedInstanceState.getString(NewsTaskLoaderCallbacks.PAGE, NewsTask.FIRST_PAGE);
     }
 
     private Bundle getLoaderBundle() {
         Bundle bundle = new Bundle();
-        bundle.putString(NewsTaskLoaderCallbacks.PAGE, currentPage);
+        bundle.putString(SummaryTaskLoaderCallbacks.URL, news.getUrl());
         return bundle;
     }
 
     @Override
     public void onLoadStarted() {
-        list.setVisibility(View.GONE);
+        startLoading();
+    }
+
+    private void startLoading() {
+        summary.setVisibility(View.GONE);
         loading.setVisibility(View.VISIBLE);
-        list.setAdapter(new EmptyAdapter());
     }
 
     @Override
-    public void onLoadFinished(NewsResponse response) {
-        list.setAdapter(new NewsAdapter(response.getNews(), LayoutInflater.from(getActivity()), getResources()));
-        list.setVisibility(View.VISIBLE);
+    public void onLoadFinished(Summary response) {
+        finishLoading();
+        if (response == null) {
+            Toast.makeText(getActivity(), R.string.generic_error_oops, Toast.LENGTH_LONG).show();
+            return;
+        }
+        summary.setText(response.getDescription());
+    }
+
+    private void finishLoading() {
+        summary.setVisibility(View.VISIBLE);
         loading.setVisibility(View.GONE);
-        currentPage = response.getCurrentPage();
-    }
-
-    @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        Toast.makeText(getActivity(), "Wohooo clicked on some item!", 0).show();
     }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putString(NewsTaskLoaderCallbacks.PAGE, currentPage);
+        outState.putSerializable(NewsDetailsActivity.EXTRA_NEWS, news);
     }
 }

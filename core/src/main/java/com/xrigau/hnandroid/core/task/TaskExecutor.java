@@ -16,7 +16,7 @@ public class TaskExecutor {
     }
 
     public <T> T execute(Task<T> task) {
-        RestAdapter restAdapter = new RestAdapter.Builder().setClient(client).setServer(API_URL).build();
+        RestAdapter restAdapter = new RestAdapter.Builder().setClient(client).setLogLevel(RestAdapter.LogLevel.FULL).setServer(API_URL).build();
         return task.execute(restAdapter.create(Services.class));
     }
 

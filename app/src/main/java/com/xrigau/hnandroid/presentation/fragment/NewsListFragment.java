@@ -1,47 +1,37 @@
 package com.xrigau.hnandroid.presentation.fragment;
 
-import android.app.Fragment;
+import android.app.ListFragment;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
 
 import com.xrigau.hnandroid.R;
+import com.xrigau.hnandroid.core.model.News;
 import com.xrigau.hnandroid.core.model.NewsResponse;
 import com.xrigau.hnandroid.core.task.NewsTask;
 import com.xrigau.hnandroid.loader.LoaderListener;
 import com.xrigau.hnandroid.loader.NewsTaskLoaderCallbacks;
 import com.xrigau.hnandroid.presentation.adapter.EmptyAdapter;
 import com.xrigau.hnandroid.presentation.adapter.NewsAdapter;
+import com.xrigau.hnandroid.util.Navigator;
 
-public class NewsListFragment extends Fragment implements LoaderListener<NewsResponse>, AdapterView.OnItemClickListener {
+public class NewsListFragment extends ListFragment implements LoaderListener<NewsResponse> {
 
     private static final int NEWS_LOADER_ID = 1;
 
     private NewsTaskLoaderCallbacks newsTaskLoaderCallbacks;
     private String currentPage;
 
-    private ListView list;
     private View loading;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_news_list, container, false);
-        findViews(root);
-        setUpViews();
-        return root;
-    }
-
-    private void findViews(View root) {
-        list = (ListView) root.findViewById(R.id.list);
         loading = root.findViewById(R.id.loading);
-    }
-
-    private void setUpViews() {
-        list.setOnItemClickListener(this);
+        return root;
     }
 
     @Override
@@ -69,22 +59,40 @@ public class NewsListFragment extends Fragment implements LoaderListener<NewsRes
 
     @Override
     public void onLoadStarted() {
-        list.setVisibility(View.GONE);
+        startLoading();
+        getListView().setAdapter(new EmptyAdapter());
+    }
+
+    private void startLoading() {
+        getListView().setVisibility(View.GONE);
         loading.setVisibility(View.VISIBLE);
-        list.setAdapter(new EmptyAdapter());
     }
 
     @Override
     public void onLoadFinished(NewsResponse response) {
-        list.setAdapter(new NewsAdapter(response.getNews(), LayoutInflater.from(getActivity()), getResources()));
-        list.setVisibility(View.VISIBLE);
-        loading.setVisibility(View.GONE);
+        finishLoading();
+
+        if (error(response)) {
+            Toast.makeText(getActivity(), R.string.generic_error_oops, Toast.LENGTH_LONG).show();
+            return;
+        }
+
+        getListView().setAdapter(new NewsAdapter(response.getNews(), LayoutInflater.from(getActivity()), getResources()));
         currentPage = response.getCurrentPage();
     }
 
+    private boolean error(NewsResponse response) {
+        return response == null;
+    }
+
+    private void finishLoading() {
+        getListView().setVisibility(View.VISIBLE);
+        loading.setVisibility(View.GONE);
+    }
+
     @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        Toast.makeText(getActivity(), "Wohooo clicked on some item!", 0).show();
+    public void onListItemClick(ListView listView, View v, int position, long id) {
+        new Navigator(getActivity()).toDetails((News) listView.getItemAtPosition(position));
     }
 
     @Override

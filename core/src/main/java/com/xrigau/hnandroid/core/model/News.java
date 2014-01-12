@@ -1,6 +1,8 @@
 package com.xrigau.hnandroid.core.model;
 
-public class News {
+import java.io.Serializable;
+
+public class News implements Serializable {
 
     private final String title;
     private final String url;
