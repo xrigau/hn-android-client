@@ -7,5 +7,6 @@
   <string name="loading">Loading…</string>
   <string name="one_comment">%1$d comment</string>
   <string name="many_comments">%1$d comments</string>
+  <string name="generic_error_oops">Oops! Something went wrong, try again later</string>
 
 </resources>

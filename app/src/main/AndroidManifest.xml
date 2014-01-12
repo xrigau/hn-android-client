@@ -16,7 +16,7 @@
     android:icon="@drawable/ic_launcher"
     android:label="@string/app_name">
     <activity
-      android:name=".presentation.NewsActivity"
+      android:name=".presentation.MainActivity"
       android:label="@string/post_list_title">
       <intent-filter>
         <action android:name="android.intent.action.MAIN" />

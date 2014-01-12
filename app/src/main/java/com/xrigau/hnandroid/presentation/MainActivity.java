@@ -16,7 +16,7 @@ import com.xrigau.hnandroid.loader.PostsTaskLoaderCallbacks;
 import com.xrigau.hnandroid.presentation.adapter.EmptyAdapter;
 import com.xrigau.hnandroid.presentation.adapter.PostsAdapter;
 
-public class NewsActivity extends Activity implements LoaderListener<NewsResponse>, AdapterView.OnItemClickListener {
+public class MainActivity extends Activity implements LoaderListener<NewsResponse>, AdapterView.OnItemClickListener {
 
     private static final int NEWS_LOADER_ID = 1;
 
@@ -30,7 +30,7 @@ public class NewsActivity extends Activity implements LoaderListener<NewsRespons
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         restoreState(savedInstanceState);
-        setContentView(R.layout.activity_post_list);
+        setContentView(R.layout.activity_news_list);
         findViews();
         setUpViews();
         postsTaskLoaderCallbacks = new PostsTaskLoaderCallbacks(this, this);

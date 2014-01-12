@@ -14,12 +14,12 @@ import static com.xrigau.hnandroid.presentation.helper.EspressoTestsMatchers.isE
 import static com.xrigau.hnandroid.presentation.helper.EspressoTestsMatchers.withChildCount;
 import static org.hamcrest.Matchers.*;
 
-public class NewsActivityTest extends ActivityInstrumentationTestCase2<NewsActivity> {
+public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActivity> {
 
     private static final int FIRST = 0;
 
-    public NewsActivityTest() {
-        super(NewsActivity.class);
+    public MainActivityTest() {
+        super(MainActivity.class);
     }
 
     public void setUp() throws Exception {
@@ -55,11 +55,10 @@ public class NewsActivityTest extends ActivityInstrumentationTestCase2<NewsActiv
 
     public void testMockItemShowsCorrectData() { // Ignore test if using real data
         Post post = new Post.Builder()
-                .id("6909146")
-                .title("On undoing, fixing, or removing commits in git")
-                .domain("sethrobertson.github.io")
-                .timestamp("1 hour ago")
-                .comments(2)
+                .title("Not Wanted")
+                .domain("ninjasandrobots.com")
+                .timestamp("3 hours ago")
+                .comments(25)
                 .build();
 
         onData(allOf(is(instanceOf(Post.class)), is(post)))

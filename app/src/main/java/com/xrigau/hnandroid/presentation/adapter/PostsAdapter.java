@@ -41,7 +41,7 @@ public class PostsAdapter extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         if (convertView == null) {
-            convertView = inflater.inflate(R.layout.posts_list_item, parent, false);
+            convertView = inflater.inflate(R.layout.news_list_item, parent, false);
             convertView.setTag(new ViewHolder(convertView));
         }
 
