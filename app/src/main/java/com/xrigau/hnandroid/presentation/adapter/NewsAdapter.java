@@ -4,14 +4,13 @@ import android.content.res.Resources;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import com.xrigau.hnandroid.R;
-import com.xrigau.hnandroid.core.model.NewsList;
 import com.xrigau.hnandroid.core.model.News;
+import com.xrigau.hnandroid.core.model.NewsList;
 
-public class NewsAdapter extends BaseAdapter {
+public class NewsAdapter extends LoadingAdapter {
 
     private final NewsList news;
     private final LayoutInflater inflater;
