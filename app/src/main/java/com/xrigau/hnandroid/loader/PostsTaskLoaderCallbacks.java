@@ -6,6 +6,7 @@ import android.content.Loader;
 import android.os.Bundle;
 
 import com.xrigau.hnandroid.core.model.NewsResponse;
+import com.xrigau.hnandroid.core.task.NewsTask;
 
 public class PostsTaskLoaderCallbacks implements LoaderManager.LoaderCallbacks<NewsResponse> {
 
@@ -22,7 +23,7 @@ public class PostsTaskLoaderCallbacks implements LoaderManager.LoaderCallbacks<N
     @Override
     public Loader onCreateLoader(int id, Bundle args) {
         listener.onLoadStarted();
-        return new PostsTaskLoader(context, args.getInt(PAGE, 0));
+        return new PostsTaskLoader(context, args.getString(PAGE, NewsTask.FIRST_PAGE));
     }
 
     @Override

@@ -2,18 +2,19 @@ package com.xrigau.hnandroid.core.model;
 
 import org.junit.Test;
 
-import static org.junit.Assert.assertEquals;
+import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertThat;
 
 public class PostShould {
 
     @Test
     public void createPostUsingBuilder() {
-        String expectedId = "someId";
+        String expectedTitle = "someTitle";
 
-        Post post = new Post.Builder().id(expectedId).build();
+        Post post = new Post.Builder().title(expectedTitle).build();
 
         assertNotNull(post);
-        assertEquals(expectedId, post.getId());
+        assertThat(post.getTitle(), is(expectedTitle));
     }
 }

@@ -2,48 +2,50 @@ package com.xrigau.hnandroid.core.model;
 
 public class Post {
 
-    private final String id;
     private final String title;
-    private final String link;
+    private final String url;
     private final String domain;
-    private final int score;
+    private final int points;
     private final String user;
+    private final String userUrl;
     private final String timestamp;
     private final int comments;
+    private final String commentsUrl;
 
-    public Post(String id, String title, String link, String domain, int score, String user, String timestamp, int comments) {
-        this.id = id;
+    public Post(String title, String url, String domain, int points, String user, String userUrl, String timestamp, int comments, String commentsUrl) {
         this.title = title;
-        this.link = link;
+        this.url = url;
         this.domain = domain;
-        this.score = score;
+        this.points = points;
         this.user = user;
+        this.userUrl = userUrl;
         this.timestamp = timestamp;
         this.comments = comments;
-    }
-
-    public String getId() {
-        return id;
+        this.commentsUrl = commentsUrl;
     }
 
     public String getTitle() {
         return title;
     }
 
-    public String getLink() {
-        return link;
+    public String getUrl() {
+        return url;
     }
 
     public String getDomain() {
         return domain;
     }
 
-    public int getScore() {
-        return score;
+    public int getPoints() {
+        return points;
     }
 
     public String getUser() {
         return user;
+    }
+
+    public String getUserUrl() {
+        return userUrl;
     }
 
     public String getTimestamp() {
@@ -52,6 +54,10 @@ public class Post {
 
     public int getComments() {
         return comments;
+    }
+
+    public String getCommentsUrl() {
+        return commentsUrl;
     }
 
     @Override
@@ -65,7 +71,7 @@ public class Post {
 
         Post post = (Post) o;
 
-        if (!id.equals(post.id)) {
+        if (!title.equals(post.title)) {
             return false;
         }
 
@@ -74,32 +80,28 @@ public class Post {
 
     @Override
     public int hashCode() {
-        return id.hashCode();
+        return title.hashCode();
     }
 
     public static class Builder {
 
-        private String id;
         private String title;
-        private String link;
+        private String url;
         private String domain;
-        private int score;
+        private int points;
         private String user;
+        private String userUrl;
         private String timestamp;
         private int comments;
-
-        public Builder id(String id) {
-            this.id = id;
-            return this;    
-        }
+        private String commentsUrl;
 
         public Builder title(String title) {
             this.title = title;
             return this;
         }
 
-        public Builder link(String link) {
-            this.link = link;
+        public Builder url(String url) {
+            this.url = url;
             return this;
         }
 
@@ -108,13 +110,18 @@ public class Post {
             return this;
         }
 
-        public Builder score(int score) {
-            this.score = score;
+        public Builder points(int points) {
+            this.points = points;
             return this;
         }
 
         public Builder user(String user) {
             this.user = user;
+            return this;
+        }
+
+        public Builder userUrl(String userUrl) {
+            this.userUrl = userUrl;
             return this;
         }
 
@@ -128,11 +135,16 @@ public class Post {
             return this;
         }
 
+        public Builder commentsUrl(String commentsUrl) {
+            this.commentsUrl = commentsUrl;
+            return this;
+        }
+
         public Post build() {
-            if (id == null) {
-                id = "";
+            if (title == null) {
+                title = "";
             }
-            return new Post(id, title, link, domain, score, user, timestamp, comments);
+            return new Post(title, url, domain, points, user, userUrl, timestamp, comments, commentsUrl);
         }
     }
     

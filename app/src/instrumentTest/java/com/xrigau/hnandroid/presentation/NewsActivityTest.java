@@ -28,7 +28,7 @@ public class NewsActivityTest extends ActivityInstrumentationTestCase2<NewsActiv
     }
 
     public void testDisplayPosts() {
-        onData(is(instanceOf(Post.class))).atPosition(0).check(matches(isDisplayed()));
+        onData(is(instanceOf(Post.class))).atPosition(FIRST).check(matches(isDisplayed()));
 
         onView(ViewMatchers.withId(R.id.list)).check(matches(withChildCount(is(greaterThan(0))))); // Because the previous instruction makes sure we have data
     }

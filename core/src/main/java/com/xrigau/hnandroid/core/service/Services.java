@@ -7,7 +7,7 @@ import retrofit.http.Path;
 
 public interface Services {
 
-    @GET("/news/{page}")
-    NewsResponse news(@Path("page") int page);
+    @GET("/{path}")
+    NewsResponse news(@Path("path") String path);
 
 }

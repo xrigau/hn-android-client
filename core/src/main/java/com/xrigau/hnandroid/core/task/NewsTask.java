@@ -5,14 +5,16 @@ import com.xrigau.hnandroid.core.service.Services;
 
 public class NewsTask implements Task<NewsResponse> {
 
-    private final int page;
+    public static final String FIRST_PAGE = "news";
 
-    public NewsTask(int page) {
-        this.page = page;
+    private final String path;
+
+    public NewsTask(String path) {
+        this.path = path;
     }
 
     @Override
     public NewsResponse execute(Services services) {
-        return services.news(page);
+        return services.news(path);
     }
 }

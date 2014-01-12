@@ -10,9 +10,9 @@ import com.xrigau.hnandroid.core.task.TaskExecutor;
 
 public class PostsTaskLoader extends AsyncTaskLoader<NewsResponse> {
 
-    private final int page;
+    private final String page;
 
-    public PostsTaskLoader(Context context, int page) {
+    public PostsTaskLoader(Context context, String page) {
         super(context);
         this.page = page;
     }

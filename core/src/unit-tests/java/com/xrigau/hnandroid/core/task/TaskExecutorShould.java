@@ -28,7 +28,7 @@ public class TaskExecutorShould {
 
     @Test
     public void getsNewsList() {
-        NewsTask task = new NewsTask(0);
+        NewsTask task = new NewsTask("/news");
 
         NewsResponse response = new TaskExecutor(new MockClient()).execute(task);
         PostList posts = response.getNews();

@@ -10,6 +10,7 @@ import android.widget.Toast;
 
 import com.xrigau.hnandroid.R;
 import com.xrigau.hnandroid.core.model.NewsResponse;
+import com.xrigau.hnandroid.core.task.NewsTask;
 import com.xrigau.hnandroid.loader.LoaderListener;
 import com.xrigau.hnandroid.loader.PostsTaskLoaderCallbacks;
 import com.xrigau.hnandroid.presentation.adapter.EmptyAdapter;
@@ -17,10 +18,10 @@ import com.xrigau.hnandroid.presentation.adapter.PostsAdapter;
 
 public class NewsActivity extends Activity implements LoaderListener<NewsResponse>, AdapterView.OnItemClickListener {
 
-    private static final int NEWS_LOADER = 1;
+    private static final int NEWS_LOADER_ID = 1;
 
     private PostsTaskLoaderCallbacks postsTaskLoaderCallbacks;
-    private int currentPage = 0;
+    private String currentPage;
 
     private ListView list;
     private View loading;
@@ -35,18 +36,18 @@ public class NewsActivity extends Activity implements LoaderListener<NewsRespons
         postsTaskLoaderCallbacks = new PostsTaskLoaderCallbacks(this, this);
 
         if (savedInstanceState != null) {
-            getLoaderManager().restartLoader(NEWS_LOADER, getLoaderBundle(), postsTaskLoaderCallbacks).forceLoad();
+            getLoaderManager().restartLoader(NEWS_LOADER_ID, getLoaderBundle(), postsTaskLoaderCallbacks).forceLoad();
             return;
         }
 
-        getLoaderManager().initLoader(NEWS_LOADER, getLoaderBundle(), postsTaskLoaderCallbacks).forceLoad();
+        getLoaderManager().initLoader(NEWS_LOADER_ID, getLoaderBundle(), postsTaskLoaderCallbacks).forceLoad();
     }
 
     private void restoreState(Bundle savedInstanceState) {
         if (savedInstanceState == null) {
             return;
         }
-        currentPage = savedInstanceState.getInt(PostsTaskLoaderCallbacks.PAGE, 0);
+        currentPage = savedInstanceState.getString(PostsTaskLoaderCallbacks.PAGE, NewsTask.FIRST_PAGE);
     }
 
     private void findViews() {
@@ -60,7 +61,7 @@ public class NewsActivity extends Activity implements LoaderListener<NewsRespons
 
     private Bundle getLoaderBundle() {
         Bundle bundle = new Bundle();
-        bundle.putInt(PostsTaskLoaderCallbacks.PAGE, currentPage);
+        bundle.putString(PostsTaskLoaderCallbacks.PAGE, currentPage);
         return bundle;
     }
 
@@ -87,6 +88,6 @@ public class NewsActivity extends Activity implements LoaderListener<NewsRespons
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putInt(PostsTaskLoaderCallbacks.PAGE, currentPage);
+        outState.putString(PostsTaskLoaderCallbacks.PAGE, currentPage);
     }
 }

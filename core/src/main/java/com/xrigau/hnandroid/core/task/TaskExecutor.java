@@ -7,7 +7,7 @@ import retrofit.client.Client;
 
 public class TaskExecutor {
 
-    private static final String API_URL = "http://192.168.10.46:32412";
+    private static final String API_URL = "http://hackednews-json-api.herokuapp.com";
 
     private final Client client;
 
