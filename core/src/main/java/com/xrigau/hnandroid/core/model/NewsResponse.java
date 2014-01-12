@@ -2,17 +2,17 @@ package com.xrigau.hnandroid.core.model;
 
 public class NewsResponse {
 
-    private final PostList items;
+    private final NewsList items;
     private final String currentPage;
     private final String nextPage;
 
-    public NewsResponse(PostList items, String currentPage, String nextPage) {
+    public NewsResponse(NewsList items, String currentPage, String nextPage) {
         this.items = items;
         this.currentPage = currentPage;
         this.nextPage = nextPage;
     }
 
-    public PostList getNews() {
+    public NewsList getNews() {
         return items;
     }
 

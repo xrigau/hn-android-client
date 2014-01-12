@@ -1,6 +1,6 @@
 package com.xrigau.hnandroid.core.model;
 
-public class Post {
+public class News {
 
     private final String title;
     private final String url;
@@ -12,7 +12,7 @@ public class Post {
     private final int comments;
     private final String commentsUrl;
 
-    public Post(String title, String url, String domain, int points, String user, String userUrl, String timestamp, int comments, String commentsUrl) {
+    public News(String title, String url, String domain, int points, String user, String userUrl, String timestamp, int comments, String commentsUrl) {
         this.title = title;
         this.url = url;
         this.domain = domain;
@@ -69,9 +69,9 @@ public class Post {
             return false;
         }
 
-        Post post = (Post) o;
+        News news = (News) o;
 
-        if (!title.equals(post.title)) {
+        if (!title.equals(news.title)) {
             return false;
         }
 
@@ -140,11 +140,11 @@ public class Post {
             return this;
         }
 
-        public Post build() {
+        public News build() {
             if (title == null) {
                 title = "";
             }
-            return new Post(title, url, domain, points, user, userUrl, timestamp, comments, commentsUrl);
+            return new News(title, url, domain, points, user, userUrl, timestamp, comments, commentsUrl);
         }
     }
     

@@ -8,29 +8,29 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import com.xrigau.hnandroid.R;
-import com.xrigau.hnandroid.core.model.Post;
-import com.xrigau.hnandroid.core.model.PostList;
+import com.xrigau.hnandroid.core.model.NewsList;
+import com.xrigau.hnandroid.core.model.News;
 
-public class PostsAdapter extends BaseAdapter {
+public class NewsAdapter extends BaseAdapter {
 
-    private final PostList posts;
+    private final NewsList news;
     private final LayoutInflater inflater;
     private final Resources resources;
 
-    public PostsAdapter(PostList posts, LayoutInflater inflater, Resources resources) {
-        this.posts = posts;
+    public NewsAdapter(NewsList news, LayoutInflater inflater, Resources resources) {
+        this.news = news;
         this.inflater = inflater;
         this.resources = resources;
     }
 
     @Override
     public int getCount() {
-        return posts.size();
+        return news.size();
     }
 
     @Override
-    public Post getItem(int position) {
-        return posts.get(position);
+    public News getItem(int position) {
+        return news.get(position);
     }
 
     @Override
@@ -46,17 +46,17 @@ public class PostsAdapter extends BaseAdapter {
         }
 
         ViewHolder holder = ViewHolder.from(convertView.getTag());
-        Post post = getItem(position);
-        populateView(holder, post);
+        News news = getItem(position);
+        populateView(holder, news);
 
         return convertView;
     }
 
-    private void populateView(ViewHolder holder, Post post) {
-        holder.title.setText(post.getTitle());
-        holder.domain.setText(post.getDomain());
-        updateCommentsVuew(holder, post.getComments());
-        holder.time.setText(post.getTimestamp());
+    private void populateView(ViewHolder holder, News news) {
+        holder.title.setText(news.getTitle());
+        holder.domain.setText(news.getDomain());
+        updateCommentsVuew(holder, news.getComments());
+        holder.time.setText(news.getTimestamp());
     }
 
     private void updateCommentsVuew(ViewHolder holder, int comments) {

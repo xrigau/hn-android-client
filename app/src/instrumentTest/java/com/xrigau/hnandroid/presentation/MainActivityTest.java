@@ -4,7 +4,7 @@ import android.test.ActivityInstrumentationTestCase2;
 
 import com.google.android.apps.common.testing.ui.espresso.matcher.ViewMatchers;
 import com.xrigau.hnandroid.R;
-import com.xrigau.hnandroid.core.model.Post;
+import com.xrigau.hnandroid.core.model.News;
 
 import static com.google.android.apps.common.testing.ui.espresso.Espresso.onData;
 import static com.google.android.apps.common.testing.ui.espresso.Espresso.onView;
@@ -27,26 +27,26 @@ public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActiv
         getActivity();
     }
 
-    public void testDisplayPosts() {
-        onData(is(instanceOf(Post.class))).atPosition(FIRST).check(matches(isDisplayed()));
+    public void testDisplayNews() {
+        onData(is(instanceOf(News.class))).atPosition(FIRST).check(matches(isDisplayed()));
 
         onView(ViewMatchers.withId(R.id.list)).check(matches(withChildCount(is(greaterThan(0))))); // Because the previous instruction makes sure we have data
     }
 
-    public void testPostIsDisplayedProperly() {
-        onData(is(instanceOf(Post.class)))
+    public void testNewsIsDisplayedProperly() {
+        onData(is(instanceOf(News.class)))
                 .atPosition(FIRST).onChildView(withId(R.id.title))
                 .check(matches(allOf(isDisplayed(), withText(not(isEmpty())))));
 
-        onData(is(instanceOf(Post.class)))
+        onData(is(instanceOf(News.class)))
                 .atPosition(FIRST).onChildView(withId(R.id.domain))
                 .check(matches(allOf(isDisplayed(), withText(not(isEmpty()))))); // Remove this if using real data
 
-        onData(is(instanceOf(Post.class)))
+        onData(is(instanceOf(News.class)))
                 .atPosition(FIRST).onChildView(withId(R.id.time))
                 .check(matches(allOf(isDisplayed(), withText(not(isEmpty())))));
 
-        onData(is(instanceOf(Post.class)))
+        onData(is(instanceOf(News.class)))
                 .atPosition(FIRST).onChildView(withId(R.id.comments))
                 .check(matches(allOf(isDisplayed(), withText(not(isEmpty()))))); // Remove this if using real data
 
@@ -54,27 +54,27 @@ public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActiv
     }
 
     public void testMockItemShowsCorrectData() { // Ignore test if using real data
-        Post post = new Post.Builder()
+        News news = new News.Builder()
                 .title("Not Wanted")
                 .domain("ninjasandrobots.com")
                 .timestamp("3 hours ago")
                 .comments(25)
                 .build();
 
-        onData(allOf(is(instanceOf(Post.class)), is(post)))
+        onData(allOf(is(instanceOf(News.class)), is(news)))
                 .onChildView(withId(R.id.title))
-                .check(matches(withText(post.getTitle())));
+                .check(matches(withText(news.getTitle())));
 
-        onData(allOf(is(instanceOf(Post.class)), is(post)))
+        onData(allOf(is(instanceOf(News.class)), is(news)))
                 .onChildView(withId(R.id.domain))
-                .check(matches(withText(post.getDomain())));
+                .check(matches(withText(news.getDomain())));
 
-        onData(allOf(is(instanceOf(Post.class)), is(post)))
+        onData(allOf(is(instanceOf(News.class)), is(news)))
                 .onChildView(withId(R.id.time))
-                .check(matches(withText(post.getTimestamp())));
+                .check(matches(withText(news.getTimestamp())));
 
-        onData(allOf(is(instanceOf(Post.class)), is(post)))
+        onData(allOf(is(instanceOf(News.class)), is(news)))
                 .onChildView(withId(R.id.comments))
-                .check(matches(withText(containsString(Integer.toString(post.getComments())))));
+                .check(matches(withText(containsString(Integer.toString(news.getComments())))));
     }
 }

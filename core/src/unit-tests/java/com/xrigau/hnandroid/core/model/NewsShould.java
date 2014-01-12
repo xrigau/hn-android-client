@@ -6,15 +6,15 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
 
-public class PostShould {
+public class NewsShould {
 
     @Test
-    public void createPostUsingBuilder() {
+    public void createNewsUsingBuilder() {
         String expectedTitle = "someTitle";
 
-        Post post = new Post.Builder().title(expectedTitle).build();
+        News news = new News.Builder().title(expectedTitle).build();
 
-        assertNotNull(post);
-        assertThat(post.getTitle(), is(expectedTitle));
+        assertNotNull(news);
+        assertThat(news.getTitle(), is(expectedTitle));
     }
 }

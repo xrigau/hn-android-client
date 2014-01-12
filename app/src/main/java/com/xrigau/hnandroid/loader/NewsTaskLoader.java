@@ -13,11 +13,11 @@ import com.xrigau.hnandroid.core.task.TaskExecutor;
 
 import retrofit.RetrofitError;
 
-public class PostsTaskLoader extends AsyncTaskLoader<NewsResponse> {
+public class NewsTaskLoader extends AsyncTaskLoader<NewsResponse> {
 
     private final String page;
 
-    public PostsTaskLoader(Context context, String page) {
+    public NewsTaskLoader(Context context, String page) {
         super(context);
         this.page = page;
     }

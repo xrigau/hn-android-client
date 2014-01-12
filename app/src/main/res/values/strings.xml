@@ -3,7 +3,7 @@
 
   <string name="app_name">AHN!</string>
 
-  <string name="post_list_title">Latest news</string>
+  <string name="news_list_title">Latest news</string>
   <string name="loading">Loading…</string>
   <string name="one_comment">%1$d comment</string>
   <string name="many_comments">%1$d comments</string>

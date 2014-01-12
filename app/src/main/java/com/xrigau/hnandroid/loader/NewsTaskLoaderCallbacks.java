@@ -8,14 +8,14 @@ import android.os.Bundle;
 import com.xrigau.hnandroid.core.model.NewsResponse;
 import com.xrigau.hnandroid.core.task.NewsTask;
 
-public class PostsTaskLoaderCallbacks implements LoaderManager.LoaderCallbacks<NewsResponse> {
+public class NewsTaskLoaderCallbacks implements LoaderManager.LoaderCallbacks<NewsResponse> {
 
     public static final String PAGE = "page";
 
     private final Context context;
     private final LoaderListener<NewsResponse> listener;
 
-    public PostsTaskLoaderCallbacks(Context context, LoaderListener<NewsResponse> listener) {
+    public NewsTaskLoaderCallbacks(Context context, LoaderListener<NewsResponse> listener) {
         this.context = context;
         this.listener = listener;
     }
@@ -23,7 +23,7 @@ public class PostsTaskLoaderCallbacks implements LoaderManager.LoaderCallbacks<N
     @Override
     public Loader onCreateLoader(int id, Bundle args) {
         listener.onLoadStarted();
-        return new PostsTaskLoader(context, args.getString(PAGE, NewsTask.FIRST_PAGE));
+        return new NewsTaskLoader(context, args.getString(PAGE, NewsTask.FIRST_PAGE));
     }
 
     @Override

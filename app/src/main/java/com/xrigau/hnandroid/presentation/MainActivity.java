@@ -12,15 +12,15 @@ import com.xrigau.hnandroid.R;
 import com.xrigau.hnandroid.core.model.NewsResponse;
 import com.xrigau.hnandroid.core.task.NewsTask;
 import com.xrigau.hnandroid.loader.LoaderListener;
-import com.xrigau.hnandroid.loader.PostsTaskLoaderCallbacks;
+import com.xrigau.hnandroid.loader.NewsTaskLoaderCallbacks;
 import com.xrigau.hnandroid.presentation.adapter.EmptyAdapter;
-import com.xrigau.hnandroid.presentation.adapter.PostsAdapter;
+import com.xrigau.hnandroid.presentation.adapter.NewsAdapter;
 
 public class MainActivity extends Activity implements LoaderListener<NewsResponse>, AdapterView.OnItemClickListener {
 
     private static final int NEWS_LOADER_ID = 1;
 
-    private PostsTaskLoaderCallbacks postsTaskLoaderCallbacks;
+    private NewsTaskLoaderCallbacks newsTaskLoaderCallbacks;
     private String currentPage;
 
     private ListView list;
@@ -33,21 +33,21 @@ public class MainActivity extends Activity implements LoaderListener<NewsRespons
         setContentView(R.layout.activity_news_list);
         findViews();
         setUpViews();
-        postsTaskLoaderCallbacks = new PostsTaskLoaderCallbacks(this, this);
+        newsTaskLoaderCallbacks = new NewsTaskLoaderCallbacks(this, this);
 
         if (savedInstanceState != null) {
-            getLoaderManager().restartLoader(NEWS_LOADER_ID, getLoaderBundle(), postsTaskLoaderCallbacks).forceLoad();
+            getLoaderManager().restartLoader(NEWS_LOADER_ID, getLoaderBundle(), newsTaskLoaderCallbacks).forceLoad();
             return;
         }
 
-        getLoaderManager().initLoader(NEWS_LOADER_ID, getLoaderBundle(), postsTaskLoaderCallbacks).forceLoad();
+        getLoaderManager().initLoader(NEWS_LOADER_ID, getLoaderBundle(), newsTaskLoaderCallbacks).forceLoad();
     }
 
     private void restoreState(Bundle savedInstanceState) {
         if (savedInstanceState == null) {
             return;
         }
-        currentPage = savedInstanceState.getString(PostsTaskLoaderCallbacks.PAGE, NewsTask.FIRST_PAGE);
+        currentPage = savedInstanceState.getString(NewsTaskLoaderCallbacks.PAGE, NewsTask.FIRST_PAGE);
     }
 
     private void findViews() {
@@ -61,7 +61,7 @@ public class MainActivity extends Activity implements LoaderListener<NewsRespons
 
     private Bundle getLoaderBundle() {
         Bundle bundle = new Bundle();
-        bundle.putString(PostsTaskLoaderCallbacks.PAGE, currentPage);
+        bundle.putString(NewsTaskLoaderCallbacks.PAGE, currentPage);
         return bundle;
     }
 
@@ -74,7 +74,7 @@ public class MainActivity extends Activity implements LoaderListener<NewsRespons
 
     @Override
     public void onLoadFinished(NewsResponse response) {
-        list.setAdapter(new PostsAdapter(response.getNews(), LayoutInflater.from(this), getResources()));
+        list.setAdapter(new NewsAdapter(response.getNews(), LayoutInflater.from(this), getResources()));
         list.setVisibility(View.VISIBLE);
         loading.setVisibility(View.GONE);
         currentPage = response.getCurrentPage();
@@ -88,6 +88,6 @@ public class MainActivity extends Activity implements LoaderListener<NewsRespons
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putString(PostsTaskLoaderCallbacks.PAGE, currentPage);
+        outState.putString(NewsTaskLoaderCallbacks.PAGE, currentPage);
     }
 }

@@ -1,8 +1,8 @@
 package com.xrigau.hnandroid.core.task;
 
 import com.xrigau.hnandroid.core.debug.MockClient;
+import com.xrigau.hnandroid.core.model.NewsList;
 import com.xrigau.hnandroid.core.model.NewsResponse;
-import com.xrigau.hnandroid.core.model.PostList;
 import com.xrigau.hnandroid.core.service.Services;
 
 import org.junit.Test;
@@ -31,10 +31,10 @@ public class TaskExecutorShould {
         NewsTask task = new NewsTask("/news");
 
         NewsResponse response = new TaskExecutor(new MockClient()).execute(task);
-        PostList posts = response.getNews();
+        NewsList news = response.getNews();
 
-        assertThat(posts.size(), is(not(0)));
-        assertNotNull(posts.get(0));
+        assertThat(news.size(), is(not(0)));
+        assertNotNull(news.get(0));
     }
 
 }
