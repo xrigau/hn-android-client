@@ -11,6 +11,7 @@
     android:theme="@style/HNTheme"
     android:icon="@drawable/ic_launcher"
     android:label="@string/app_name">
+
     <activity
       android:name=".presentation.MainActivity"
       android:label="@string/news_list_title">
@@ -20,6 +21,11 @@
         <category android:name="android.intent.category.LAUNCHER" />
       </intent-filter>
     </activity>
+
+    <activity
+      android:name=".presentation.NewsDetailsActivity"
+      android:label="@string/news_details_title" />
+
   </application>
 
 </manifest>

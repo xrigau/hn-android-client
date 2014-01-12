@@ -1,16 +1,10 @@
 package com.xrigau.hnandroid.core.task;
 
 import com.xrigau.hnandroid.core.debug.MockClient;
-import com.xrigau.hnandroid.core.model.NewsList;
-import com.xrigau.hnandroid.core.model.NewsResponse;
 import com.xrigau.hnandroid.core.service.Services;
 
 import org.junit.Test;
 
-import static org.hamcrest.CoreMatchers.not;
-import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
@@ -18,23 +12,12 @@ import static org.mockito.Mockito.verify;
 public class TaskExecutorShould {
 
     @Test
-    public void executeNewsRequest() {
-        NewsTask task = mock(NewsTask.class);
+    public void executeTask() {
+        Task task = mock(Task.class);
 
         new TaskExecutor(new MockClient()).execute(task);
 
         verify(task).execute(any(Services.class));
-    }
-
-    @Test
-    public void getsNewsList() {
-        NewsTask task = new NewsTask("/news");
-
-        NewsResponse response = new TaskExecutor(new MockClient()).execute(task);
-        NewsList news = response.getNews();
-
-        assertThat(news.size(), is(not(0)));
-        assertNotNull(news.get(0));
     }
 
 }
