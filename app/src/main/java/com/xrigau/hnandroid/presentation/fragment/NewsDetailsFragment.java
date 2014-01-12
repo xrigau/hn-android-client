@@ -1,25 +1,22 @@
 package com.xrigau.hnandroid.presentation.fragment;
 
-import android.app.Fragment;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.xrigau.hnandroid.R;
 import com.xrigau.hnandroid.core.model.News;
 import com.xrigau.hnandroid.core.model.Summary;
-import com.xrigau.hnandroid.loader.LoaderListener;
-import com.xrigau.hnandroid.loader.SummaryTaskLoaderCallbacks;
-import com.xrigau.hnandroid.presentation.NewsDetailsActivity;
+import com.xrigau.hnandroid.presentation.activity.NewsDetailsActivity;
 
-public class NewsDetailsFragment extends Fragment implements LoaderListener<Summary> {
+import static com.xrigau.hnandroid.core.task.TaskFactory.summaryTask;
 
-    private static final int SUMMARY_LOADER_ID = 2;
+public class NewsDetailsFragment extends HNFragment implements DetachableTaskListener<Summary> {
 
-    private SummaryTaskLoaderCallbacks summaryTaskLoaderCallbacks;
+    private static final String NEWS_KEY = "com.xrigau.hnandroid.NEWS_KEY";
+
     private News news;
 
     private TextView summary;
@@ -42,28 +39,16 @@ public class NewsDetailsFragment extends Fragment implements LoaderListener<Summ
         super.onActivityCreated(savedInstanceState);
         restoreState(savedInstanceState);
 
-        summaryTaskLoaderCallbacks = new SummaryTaskLoaderCallbacks(getActivity(), this);
-
-        getLoaderManager().initLoader(SUMMARY_LOADER_ID, getLoaderBundle(), summaryTaskLoaderCallbacks).forceLoad();
+        startLoading();
+        execute(summaryTask(news.getUrl()), this);
     }
 
     private void restoreState(Bundle savedInstanceState) {
-        if (savedInstanceState != null) {
-            news = (News) savedInstanceState.getSerializable(NewsDetailsActivity.EXTRA_NEWS);
+        if (savedInstanceState != null && savedInstanceState.containsKey(NEWS_KEY)) {
+            news = (News) savedInstanceState.getSerializable(NEWS_KEY);
         } else if (getActivity().getIntent().hasExtra(NewsDetailsActivity.EXTRA_NEWS)) {
             news = (News) getActivity().getIntent().getSerializableExtra(NewsDetailsActivity.EXTRA_NEWS);
         }
-    }
-
-    private Bundle getLoaderBundle() {
-        Bundle bundle = new Bundle();
-        bundle.putString(SummaryTaskLoaderCallbacks.URL, news.getUrl());
-        return bundle;
-    }
-
-    @Override
-    public void onLoadStarted() {
-        startLoading();
     }
 
     private void startLoading() {
@@ -72,10 +57,16 @@ public class NewsDetailsFragment extends Fragment implements LoaderListener<Summ
     }
 
     @Override
-    public void onLoadFinished(Summary response) {
+    public boolean isAttached() {
+        return isAdded() && !isDetached();
+    }
+
+    @Override
+    public void onLoadFinished(Summary response, Throwable error) {
         finishLoading();
-        if (response == null) {
-            Toast.makeText(getActivity(), R.string.generic_error_oops, Toast.LENGTH_LONG).show();
+        if (error(response)) {
+            log(error);
+            toast(R.string.generic_error_oops);
             return;
         }
         summary.setText(response.getDescription());
@@ -86,9 +77,13 @@ public class NewsDetailsFragment extends Fragment implements LoaderListener<Summ
         loading.setVisibility(View.GONE);
     }
 
+    private boolean error(Summary response) {
+        return response == null;
+    }
+
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putSerializable(NewsDetailsActivity.EXTRA_NEWS, news);
+        outState.putSerializable(NEWS_KEY, news);
     }
 }

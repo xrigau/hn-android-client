@@ -13,6 +13,7 @@
   <string name="one_comment">%1$d comment</string>
   <string name="many_comments">%1$d comments</string>
 
+  <string name="fragment_task_tag">com.xrigau.hnandroid.FragmentTaskTag</string>
   <string name="fragment_news_list_tag">com.xrigau.hnandroid.FragmentNewsListTag</string>
   <string name="fragment_news_details_tag">com.xrigau.hnandroid.FragmentNewsDetailsTag</string>
 

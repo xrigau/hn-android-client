@@ -1,37 +1,43 @@
 package com.xrigau.hnandroid.presentation.fragment;
 
-import android.app.ListFragment;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ListView;
-import android.widget.Toast;
+import android.widget.AbsListView;
+import android.widget.AdapterView;
 
 import com.xrigau.hnandroid.R;
 import com.xrigau.hnandroid.core.model.News;
 import com.xrigau.hnandroid.core.model.NewsResponse;
-import com.xrigau.hnandroid.core.task.NewsTask;
-import com.xrigau.hnandroid.loader.LoaderListener;
-import com.xrigau.hnandroid.loader.NewsTaskLoaderCallbacks;
 import com.xrigau.hnandroid.presentation.adapter.EmptyAdapter;
 import com.xrigau.hnandroid.presentation.adapter.NewsAdapter;
 import com.xrigau.hnandroid.util.Navigator;
 
-public class NewsListFragment extends ListFragment implements LoaderListener<NewsResponse> {
+import static com.xrigau.hnandroid.core.task.TaskFactory.newsTask;
 
-    private static final int NEWS_LOADER_ID = 1;
+public class NewsListFragment extends HNFragment implements DetachableTaskListener<NewsResponse>, AdapterView.OnItemClickListener {
 
-    private NewsTaskLoaderCallbacks newsTaskLoaderCallbacks;
+    private static final String CURRENT_PAGE_KEY = "com.xrigau.hnandroid.CURRENT_PAGE_KEY";
+    private static final String NEXT_PAGE_KEY = "com.xrigau.hnandroid.NEXT_PAGE_KEY";
+
     private String currentPage;
+    private String nextPage;
 
     private View loading;
+    private AbsListView list;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_news_list, container, false);
-        loading = root.findViewById(R.id.loading);
+        findViews(root);
+        list.setOnItemClickListener(this);
         return root;
+    }
+
+    private void findViews(View root) {
+        loading = root.findViewById(R.id.loading);
+        list = (AbsListView) root.findViewById(R.id.list);
     }
 
     @Override
@@ -39,46 +45,45 @@ public class NewsListFragment extends ListFragment implements LoaderListener<New
         super.onActivityCreated(savedInstanceState);
         restoreState(savedInstanceState);
 
-        newsTaskLoaderCallbacks = new NewsTaskLoaderCallbacks(getActivity(), this);
-
-        getLoaderManager().initLoader(NEWS_LOADER_ID, getLoaderBundle(), newsTaskLoaderCallbacks).forceLoad();
+        list.setAdapter(new EmptyAdapter());
+        startLoading();
+        if (savedInstanceState != null) {
+            execute(newsTask(currentPage), this);
+            return;
+        }
+        execute(newsTask(nextPage), this);
     }
 
     private void restoreState(Bundle savedInstanceState) {
         if (savedInstanceState == null) {
             return;
         }
-        currentPage = savedInstanceState.getString(NewsTaskLoaderCallbacks.PAGE, NewsTask.FIRST_PAGE);
-    }
-
-    private Bundle getLoaderBundle() {
-        Bundle bundle = new Bundle();
-        bundle.putString(NewsTaskLoaderCallbacks.PAGE, currentPage);
-        return bundle;
-    }
-
-    @Override
-    public void onLoadStarted() {
-        startLoading();
-        getListView().setAdapter(new EmptyAdapter());
+        currentPage = savedInstanceState.getString(CURRENT_PAGE_KEY);
+        nextPage = savedInstanceState.getString(NEXT_PAGE_KEY);
     }
 
     private void startLoading() {
-        getListView().setVisibility(View.GONE);
+        list.setVisibility(View.GONE);
         loading.setVisibility(View.VISIBLE);
     }
 
     @Override
-    public void onLoadFinished(NewsResponse response) {
-        finishLoading();
+    public boolean isAttached() {
+        return isAdded() && !isDetached();
+    }
 
+    @Override
+    public void onLoadFinished(NewsResponse response, Throwable error) {
+        finishLoading();
         if (error(response)) {
-            Toast.makeText(getActivity(), R.string.generic_error_oops, Toast.LENGTH_LONG).show();
+            log(error);
+            toast(R.string.generic_error_oops);
             return;
         }
 
-        getListView().setAdapter(new NewsAdapter(response.getNews(), LayoutInflater.from(getActivity()), getResources()));
+        list.setAdapter(new NewsAdapter(response.getNews(), LayoutInflater.from(getActivity()), getResources()));
         currentPage = response.getCurrentPage();
+        nextPage = response.getNextPage();
     }
 
     private boolean error(NewsResponse response) {
@@ -86,18 +91,19 @@ public class NewsListFragment extends ListFragment implements LoaderListener<New
     }
 
     private void finishLoading() {
-        getListView().setVisibility(View.VISIBLE);
+        list.setVisibility(View.VISIBLE);
         loading.setVisibility(View.GONE);
     }
 
     @Override
-    public void onListItemClick(ListView listView, View v, int position, long id) {
-        new Navigator(getActivity()).toDetails((News) listView.getItemAtPosition(position));
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        new Navigator(getActivity()).toDetails((News) list.getItemAtPosition(position));
     }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putString(NewsTaskLoaderCallbacks.PAGE, currentPage);
+        outState.putString(CURRENT_PAGE_KEY, currentPage);
+        outState.putString(NEXT_PAGE_KEY, nextPage);
     }
 }
