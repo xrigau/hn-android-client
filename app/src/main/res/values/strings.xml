@@ -3,7 +3,6 @@
 
   <string name="app_name">AHN!</string>
 
-  <string name="news_list_title">Latest news</string>
   <string name="news_details_title">Details</string>
 
   <string name="loading">Loading…</string>
@@ -16,5 +15,8 @@
   <string name="fragment_task_tag">com.xrigau.hnandroid.FragmentTaskTag</string>
   <string name="fragment_news_list_tag">com.xrigau.hnandroid.FragmentNewsListTag</string>
   <string name="fragment_news_details_tag">com.xrigau.hnandroid.FragmentNewsDetailsTag</string>
+  <string name="share">Share</string>
+  <string name="open_in_browser">Open in browser</string>
+  <string name="share_news_subject">Check out this news</string>
 
 </resources>

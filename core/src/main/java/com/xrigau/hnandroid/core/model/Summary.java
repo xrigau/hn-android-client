@@ -5,15 +5,17 @@ public class Summary {
     private final String name;
     private final String image;
     private final String description;
+    private final String text;
     private final String url;
     private final String type;
     private final String schema;
     private final String dateAccessed;
 
-    public Summary(String name, String image, String description, String url, String type, String schema, String dateAccessed) {
+    public Summary(String name, String image, String description, String text, String url, String type, String schema, String dateAccessed) {
         this.name = name;
         this.image = image;
         this.description = description;
+        this.text = text;
         this.url = url;
         this.type = type;
         this.schema = schema;
@@ -30,6 +32,10 @@ public class Summary {
 
     public String getDescription() {
         return description;
+    }
+
+    public String getText() {
+        return text;
     }
 
     public String getUrl() {
@@ -53,6 +59,7 @@ public class Summary {
         private String name;
         private String image;
         private String description;
+        private String text;
         private String url;
         private String type;
         private String schema;
@@ -69,6 +76,11 @@ public class Summary {
         }
 
         public Builder description(String description) {
+            this.description = description;
+            return this;
+        }
+
+        public Builder text(String description) {
             this.description = description;
             return this;
         }
@@ -94,7 +106,7 @@ public class Summary {
         }
 
         public Summary build() {
-            return new Summary(name, image, description, url, type, schema, dateAccessed);
+            return new Summary(name, image, description, text, url, type, schema, dateAccessed);
         }
     }
     
