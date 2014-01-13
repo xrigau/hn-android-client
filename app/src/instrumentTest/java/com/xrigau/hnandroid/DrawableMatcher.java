@@ -1,4 +1,4 @@
-package com.xrigau.hnandroid.presentation.helper;
+package com.xrigau.hnandroid;
 
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;

@@ -1,8 +1,9 @@
-package com.xrigau.hnandroid.presentation.activity;
+package com.xrigau.hnandroid.newslist;
 
 import android.os.Bundle;
 
 import com.xrigau.hnandroid.R;
+import com.xrigau.hnandroid.HNActivity;
 
 public class MainActivity extends HNActivity {
 

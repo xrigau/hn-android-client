@@ -1,4 +1,4 @@
-package com.xrigau.hnandroid.presentation.adapter;
+package com.xrigau.hnandroid.newslist;
 
 import android.content.res.Resources;
 import android.view.LayoutInflater;
@@ -9,14 +9,15 @@ import android.widget.TextView;
 import com.xrigau.hnandroid.R;
 import com.xrigau.hnandroid.core.model.News;
 import com.xrigau.hnandroid.core.model.NewsList;
+import com.xrigau.hnandroid.util.LoadingAdapter;
 
-public class NewsAdapter extends LoadingAdapter {
+class NewsAdapter extends LoadingAdapter {
 
     private final NewsList news;
     private final LayoutInflater inflater;
     private final Resources resources;
 
-    public NewsAdapter(NewsList news, LayoutInflater inflater, Resources resources) {
+    NewsAdapter(NewsList news, LayoutInflater inflater, Resources resources) {
         this.news = news;
         this.inflater = inflater;
         this.resources = resources;

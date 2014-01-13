@@ -1,4 +1,4 @@
-package com.xrigau.hnandroid.util;
+package com.xrigau.hnandroid.task;
 
 public class TaskFragmentNotAvailableException extends IllegalStateException {
     public TaskFragmentNotAvailableException() {

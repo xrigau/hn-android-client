@@ -1,14 +1,14 @@
-package com.xrigau.hnandroid.presentation.activity;
+package com.xrigau.hnandroid;
 
 import android.app.Activity;
 import android.os.Bundle;
 import android.widget.Toast;
 
-import com.xrigau.hnandroid.R;
 import com.xrigau.hnandroid.core.task.BaseTask;
-import com.xrigau.hnandroid.presentation.fragment.DetachableTaskListener;
-import com.xrigau.hnandroid.presentation.fragment.TaskFragment;
-import com.xrigau.hnandroid.util.TaskFragmentNotAvailableException;
+import com.xrigau.hnandroid.task.DetachableTaskListener;
+import com.xrigau.hnandroid.task.TaskFragment;
+import com.xrigau.hnandroid.task.TaskFragmentNotAvailableException;
+import com.xrigau.hnandroid.task.TaskResult;
 
 public class HNActivity extends Activity {
 
@@ -37,7 +37,7 @@ public class HNActivity extends Activity {
 
     public <T> void execute(BaseTask<T> task, DetachableTaskListener<T> listener) {
         if (taskFragment == null) {
-            listener.onLoadFinished(null, new TaskFragmentNotAvailableException());
+            listener.onLoadFinished(new TaskResult<T>(new TaskFragmentNotAvailableException()));
             return;
         }
         taskFragment.execute(task, listener);

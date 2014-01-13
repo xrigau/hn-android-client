@@ -1,4 +1,4 @@
-package com.xrigau.hnandroid.presentation.activity;
+package com.xrigau.hnandroid.newslist;
 
 import android.test.ActivityInstrumentationTestCase2;
 
@@ -10,8 +10,8 @@ import static com.google.android.apps.common.testing.ui.espresso.Espresso.onData
 import static com.google.android.apps.common.testing.ui.espresso.Espresso.onView;
 import static com.google.android.apps.common.testing.ui.espresso.assertion.ViewAssertions.matches;
 import static com.google.android.apps.common.testing.ui.espresso.matcher.ViewMatchers.*;
-import static com.xrigau.hnandroid.presentation.helper.EspressoTestsMatchers.isEmpty;
-import static com.xrigau.hnandroid.presentation.helper.EspressoTestsMatchers.withChildCount;
+import static com.xrigau.hnandroid.EspressoTestsMatchers.isEmpty;
+import static com.xrigau.hnandroid.EspressoTestsMatchers.withChildCount;
 import static org.hamcrest.Matchers.*;
 
 public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActivity> {

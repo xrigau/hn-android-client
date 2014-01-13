@@ -1,4 +1,4 @@
-package com.xrigau.hnandroid.presentation.fragment;
+package com.xrigau.hnandroid.newslist;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -7,11 +7,13 @@ import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 
+import com.xrigau.hnandroid.HNFragment;
 import com.xrigau.hnandroid.R;
 import com.xrigau.hnandroid.core.model.News;
 import com.xrigau.hnandroid.core.model.NewsResponse;
-import com.xrigau.hnandroid.presentation.adapter.EmptyAdapter;
-import com.xrigau.hnandroid.presentation.adapter.NewsAdapter;
+import com.xrigau.hnandroid.task.DetachableTaskListener;
+import com.xrigau.hnandroid.task.TaskResult;
+import com.xrigau.hnandroid.util.EmptyAdapter;
 import com.xrigau.hnandroid.util.Navigator;
 
 import static com.xrigau.hnandroid.core.task.TaskFactory.newsTask;
@@ -73,21 +75,22 @@ public class NewsListFragment extends HNFragment implements DetachableTaskListen
     }
 
     @Override
-    public void onLoadFinished(NewsResponse response, Throwable error) {
+    public void onLoadFinished(TaskResult<NewsResponse> taskResult) {
         finishLoading();
-        if (error(response)) {
-            log(error);
+        if (error(taskResult)) {
+            log(taskResult.error);
             toast(R.string.generic_error_oops);
             return;
         }
 
+        NewsResponse response = taskResult.result;
         list.setAdapter(new NewsAdapter(response.getNews(), LayoutInflater.from(getActivity()), getResources()));
         currentPage = response.getCurrentPage();
         nextPage = response.getNextPage();
     }
 
-    private boolean error(NewsResponse response) {
-        return response == null;
+    private boolean error(TaskResult taskResult) {
+        return taskResult.result == null && taskResult.error != null;
     }
 
     private void finishLoading() {

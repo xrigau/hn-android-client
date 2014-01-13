@@ -1,4 +1,4 @@
-package com.xrigau.hnandroid.presentation.adapter;
+package com.xrigau.hnandroid.util;
 
 import android.widget.BaseAdapter;
 

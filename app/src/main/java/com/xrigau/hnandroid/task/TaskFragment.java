@@ -1,4 +1,4 @@
-package com.xrigau.hnandroid.presentation.fragment;
+package com.xrigau.hnandroid.task;
 
 import android.app.Fragment;
 import android.os.AsyncTask;
@@ -30,9 +30,9 @@ public class TaskFragment extends Fragment {
     }
 
     public <T> void execute(final BaseTask<T> task, DetachableTaskListener<T> listener) {
-        Object result = RESPONSE_CACHE.get(task);
+        T result = (T) RESPONSE_CACHE.get(task);
         if (isCached(result)) {
-            listener.onLoadFinished((T) result, null);
+            listener.onLoadFinished(new TaskResult<T>(result, null));
             return;
         }
         boolean alreadyRunning = TASKS_LISTENERS.containsKey(task);
@@ -52,7 +52,7 @@ public class TaskFragment extends Fragment {
         TASKS_LISTENERS.put(task, listener);
     }
 
-    private static final class HNAsyncTask<T> extends AsyncTask<TaskExecutor, Throwable, T> {
+    private static final class HNAsyncTask<T> extends AsyncTask<TaskExecutor, Throwable, TaskResult<T>> {
 
         private final BaseTask<T> task;
 
@@ -61,44 +61,46 @@ public class TaskFragment extends Fragment {
         }
 
         @Override
-        protected T doInBackground(TaskExecutor... params) {
+        protected TaskResult<T> doInBackground(TaskExecutor... params) {
             TaskExecutor executor = params[0];
+            T result = null;
+            Throwable error = null;
             try {
-                return executor.execute(task);
+                result = executor.execute(task);
             } catch (RetrofitError e) {
-                Log.w("HN", "Ingored exception - " + e.getLocalizedMessage());
-                publishProgress(e);
-                return null;
+                log(e);
+                error = e;
             }
+            if (zeroBytesResponse(result)) {
+                error = new NullPointerException("Result is null, means response came with 0 bytes!");
+            }
+            return new TaskResult<T>(result, error);
         }
 
-        @Override
-        protected void onPostExecute(T result) {
-            DetachableTaskListener<T> listener = TASKS_LISTENERS.remove(task);
-            if (isError(result)) {
-                return;
-            }
-
-            RESPONSE_CACHE.put(task, result);
-            if (listener.isAttached()) {
-                listener.onLoadFinished(result, null);
-            }
-        }
-
-        private boolean isError(T result) {
+        private boolean zeroBytesResponse(T result) {
             return result == null;
         }
 
         @Override
-        protected void onProgressUpdate(Throwable... error) {
-            DetachableTaskListener<T> listener = getListener(task);
+        protected void onPostExecute(TaskResult<T> taskResult) {
+            DetachableTaskListener<T> listener = TASKS_LISTENERS.remove(task);
+            if (isSuccess(taskResult)) {
+                RESPONSE_CACHE.put(task, taskResult.result);
+            }
+
             if (listener.isAttached()) {
-                listener.onLoadFinished(null, error[0]);
+                listener.onLoadFinished(taskResult);
             }
         }
 
-        private <T> DetachableTaskListener<T> getListener(BaseTask<T> task) {
-            return TASKS_LISTENERS.get(task);
+        private boolean isSuccess(TaskResult taskResult) {
+            return taskResult.result != null && taskResult.error == null;
+        }
+
+        private void log(Throwable error) {
+            if (BuildConfig.DEBUG) {
+                Log.e("HN", "An error occurred", error);
+            }
         }
     }
 

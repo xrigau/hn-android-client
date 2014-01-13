@@ -1,4 +1,4 @@
-package com.xrigau.hnandroid.presentation.fragment;
+package com.xrigau.hnandroid.newsdetails;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -9,7 +9,9 @@ import android.widget.TextView;
 import com.xrigau.hnandroid.R;
 import com.xrigau.hnandroid.core.model.News;
 import com.xrigau.hnandroid.core.model.Summary;
-import com.xrigau.hnandroid.presentation.activity.NewsDetailsActivity;
+import com.xrigau.hnandroid.HNFragment;
+import com.xrigau.hnandroid.task.DetachableTaskListener;
+import com.xrigau.hnandroid.task.TaskResult;
 
 import static com.xrigau.hnandroid.core.task.TaskFactory.summaryTask;
 
@@ -62,13 +64,14 @@ public class NewsDetailsFragment extends HNFragment implements DetachableTaskLis
     }
 
     @Override
-    public void onLoadFinished(Summary response, Throwable error) {
+    public void onLoadFinished(TaskResult<Summary> taskResult) {
         finishLoading();
-        if (error(response)) {
-            log(error);
+        if (error(taskResult)) {
+            log(taskResult.error);
             toast(R.string.generic_error_oops);
             return;
         }
+        Summary response = taskResult.result;
         summary.setText(response.getDescription());
     }
 
@@ -77,8 +80,8 @@ public class NewsDetailsFragment extends HNFragment implements DetachableTaskLis
         loading.setVisibility(View.GONE);
     }
 
-    private boolean error(Summary response) {
-        return response == null;
+    private boolean error(TaskResult taskResult) {
+        return taskResult.result == null && taskResult.error != null;
     }
 
     @Override
