@@ -11,9 +11,12 @@ subprojects {
         maven {
             url "https://github.com/novoda/public-mvn-repo/raw/master/releases"
         }
+        maven {
+            url "https://repo.commonsware.com.s3.amazonaws.com"
+        }
     }
 }
 
 task wrapper(type: Wrapper) {
-    gradleVersion = '1.8'
+    gradleVersion = '1.9'
 }
