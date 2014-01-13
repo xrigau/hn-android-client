@@ -14,7 +14,6 @@ import com.xrigau.hnandroid.core.model.NewsResponse;
 import com.xrigau.hnandroid.task.DetachableTaskListener;
 import com.xrigau.hnandroid.task.TaskResult;
 import com.xrigau.hnandroid.util.EmptyAdapter;
-import com.xrigau.hnandroid.util.Navigator;
 
 import static com.xrigau.hnandroid.core.task.TaskFactory.newsTask;
 
@@ -100,7 +99,7 @@ public class NewsListFragment extends HNFragment implements DetachableTaskListen
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        new Navigator(getActivity()).toDetails((News) list.getItemAtPosition(position));
+        navigate().toDetails((News) list.getItemAtPosition(position));
     }
 
     @Override
