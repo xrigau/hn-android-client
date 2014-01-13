@@ -9,6 +9,7 @@ import com.xrigau.hnandroid.task.DetachableTaskListener;
 import com.xrigau.hnandroid.task.TaskFragment;
 import com.xrigau.hnandroid.task.TaskFragmentNotAvailableException;
 import com.xrigau.hnandroid.task.TaskResult;
+import com.xrigau.hnandroid.util.Navigator;
 
 public class HNActivity extends Activity {
 
@@ -45,5 +46,9 @@ public class HNActivity extends Activity {
 
     public void toast(int stringResource) {
         Toast.makeText(this, stringResource, Toast.LENGTH_LONG).show();
+    }
+
+    protected Navigator navigate() {
+        return new Navigator(this);
     }
 }

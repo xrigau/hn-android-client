@@ -5,6 +5,7 @@ import android.util.Log;
 
 import com.xrigau.hnandroid.core.task.BaseTask;
 import com.xrigau.hnandroid.task.DetachableTaskListener;
+import com.xrigau.hnandroid.util.Navigator;
 
 public class HNFragment extends Fragment {
 
@@ -26,4 +27,7 @@ public class HNFragment extends Fragment {
         getHNActivity().toast(stringResource);
     }
 
+    protected Navigator navigate() {
+        return new Navigator(getActivity());
+    }
 }
