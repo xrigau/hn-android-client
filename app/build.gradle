@@ -10,7 +10,6 @@ dependencies {
     compile project(":core")
     compile 'com.novoda.imageloader:imageloader-core:1.6.+'
     compile 'com.commonsware.cwac:anddown:0.2.0'
-
 }
 
 android {

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
   android:layout_width="match_parent"
   android:layout_height="match_parent">
 
@@ -31,17 +32,17 @@
         android:paddingBottom="6dp"
         android:fontFamily="sans-serif-condensed" />
 
-      <TextView
+      <com.xrigau.hnandroid.views.CustomFontTextView
         android:id="@+id/text"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:textAppearance="?android:textAppearanceMedium"
         android:layout_below="@id/image"
-        android:layout_marginTop="12dp"
-        android:layout_marginLeft="6dp"
-        android:layout_marginRight="6dp"
-        android:layout_marginBottom="12dp"
-        android:fontFamily="sans-serif-thin"
+        android:layout_marginTop="14dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginBottom="14dp"
+        app:font="Roboto-Light"
         android:linksClickable="true"
         android:autoLink="web"
         android:textIsSelectable="true" />
