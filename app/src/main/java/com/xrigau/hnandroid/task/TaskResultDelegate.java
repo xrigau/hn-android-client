@@ -1,5 +1,7 @@
 package com.xrigau.hnandroid.task;
 
+import com.xrigau.hnandroid.core.task.BaseTask;
+
 public interface TaskResultDelegate<T> {
-    void delegateResult(TaskResult<T> taskResult);
+    <T> void onResult(BaseTask<T> task, TaskResult<T> taskResult);
 }

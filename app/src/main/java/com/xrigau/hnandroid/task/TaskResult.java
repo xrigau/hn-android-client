@@ -9,7 +9,7 @@ public class TaskResult<T> {
         this.error = error;
     }
 
-    TaskResult(T result, Throwable error) {
+    public TaskResult(T result, Throwable error) {
         this.result = result;
         this.error = error;
     }

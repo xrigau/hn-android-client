@@ -2,6 +2,7 @@ package com.xrigau.hnandroid;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.util.LruCache;
 import android.widget.Toast;
 
 import com.xrigau.hnandroid.core.task.BaseTask;
@@ -9,6 +10,9 @@ import com.xrigau.hnandroid.task.*;
 import com.xrigau.hnandroid.util.Navigator;
 
 public abstract class HNActivity extends Activity implements TaskResultDelegate {
+
+    private static final int RESPONSE_CACHE_SIZE = 20;
+    private final static LruCache<BaseTask<?>, Object> RESPONSE_CACHE = new LruCache<BaseTask<?>, Object>(RESPONSE_CACHE_SIZE);
 
     private TaskFragment taskFragment;
 
@@ -38,18 +42,6 @@ public abstract class HNActivity extends Activity implements TaskResultDelegate 
         getFragmentManager().beginTransaction().add(taskFragment, getString(R.string.fragment_task_tag)).commit();
     }
 
-    public <T> void execute(BaseTask<T> task) {
-        if (taskFragmentUnavailable()) {
-            delegateResult(new TaskResult<T>(new TaskFragmentNotAvailableException()));
-            return;
-        }
-        taskFragment.execute(task);
-    }
-
-    private boolean taskFragmentUnavailable() {
-        return taskFragment == null;
-    }
-
     public void toast(int stringResource) {
         Toast.makeText(this, stringResource, Toast.LENGTH_LONG).show();
     }
@@ -57,4 +49,40 @@ public abstract class HNActivity extends Activity implements TaskResultDelegate 
     protected Navigator navigate() {
         return new Navigator(this);
     }
+
+    public <T> void execute(BaseTask<T> task) {
+        T result = (T) RESPONSE_CACHE.get(task);
+        if (isCached(result)) {
+            deliverResult(new TaskResult<T>(result, null));
+            return;
+        }
+
+        if (taskFragmentUnavailable()) {
+            deliverResult(new TaskResult<T>(new TaskFragmentNotAvailableException()));
+            return;
+        }
+        taskFragment.execute(task);
+    }
+
+    private boolean isCached(Object result) {
+        return result != null;
+    }
+
+    private boolean taskFragmentUnavailable() {
+        return taskFragment == null;
+    }
+
+    @Override
+    public void onResult(BaseTask task, TaskResult taskResult) {
+        if (isSuccess(taskResult)) {
+            RESPONSE_CACHE.put(task, taskResult.result);
+        }
+        deliverResult(taskResult);
+    }
+
+    private boolean isSuccess(TaskResult taskResult) {
+        return taskResult.result != null && taskResult.error == null;
+    }
+
+    protected abstract <T> void deliverResult(TaskResult<T> taskResult);
 }

@@ -28,7 +28,7 @@ public class NewsDetailsActivity extends HNActivity {
     }
 
     @Override
-    public void delegateResult(TaskResult taskResult) {
+    public void deliverResult(TaskResult taskResult) {
         NewsDetailsFragment newsListFragment = (NewsDetailsFragment) getFragmentManager().findFragmentByTag(getString(R.string.fragment_news_details_tag));
         if (isAttached(newsListFragment)) {
             newsListFragment.onLoadFinished(taskResult);

@@ -2,7 +2,6 @@ package com.xrigau.hnandroid.task;
 
 import android.os.AsyncTask;
 import android.util.Log;
-import android.util.LruCache;
 
 import com.xrigau.hnandroid.BuildConfig;
 import com.xrigau.hnandroid.core.task.BaseTask;
@@ -17,12 +16,10 @@ final class HNAsyncTask<T> extends AsyncTask<TaskExecutor, Throwable, TaskResult
     }
 
     private final BaseTask<T> task;
-    private final LruCache<BaseTask<?>, Object> responseCache;
     private final OnAsyncTaskFinishedListener listener;
 
-    HNAsyncTask(BaseTask<T> task, LruCache<BaseTask<?>, Object> responseCache, OnAsyncTaskFinishedListener listener) {
+    HNAsyncTask(BaseTask<T> task, OnAsyncTaskFinishedListener listener) {
         this.task = task;
-        this.responseCache = responseCache;
         this.listener = listener;
     }
 
@@ -49,14 +46,7 @@ final class HNAsyncTask<T> extends AsyncTask<TaskExecutor, Throwable, TaskResult
 
     @Override
     protected void onPostExecute(TaskResult<T> taskResult) {
-        if (isSuccess(taskResult)) {
-            responseCache.put(task, taskResult.result);
-        }
         listener.onAsyncTaskFinished(task, taskResult);
-    }
-
-    private boolean isSuccess(TaskResult taskResult) {
-        return taskResult.result != null && taskResult.error == null;
     }
 
     private void log(Throwable error) {
