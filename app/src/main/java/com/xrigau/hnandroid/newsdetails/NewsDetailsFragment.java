@@ -123,6 +123,10 @@ public class NewsDetailsFragment extends HNFragment implements DetachableTaskLis
         displaySummary(response);
     }
 
+    private boolean error(TaskResult taskResult) {
+        return taskResult.result == null && taskResult.error != null;
+    }
+
     private void displaySummary(Summary response) {
         new NovodaImageLoader.Builder(getActivity()).build().load(response.getImage(), image);
         title.setText(getBestTitle(response));
@@ -142,16 +146,13 @@ public class NewsDetailsFragment extends HNFragment implements DetachableTaskLis
 
     private String getBestContent(Summary response) {
         String text = response.getText();
-        return TextUtils.isEmpty(text) ? response.getDescription() : text;
+        String content = TextUtils.isEmpty(text) ? response.getDescription() : text;
+        return content == null ? "" : content;
     }
 
     private void finishLoading() {
         content.setVisibility(View.VISIBLE);
         loading.setVisibility(View.GONE);
-    }
-
-    private boolean error(TaskResult taskResult) {
-        return taskResult.result == null && taskResult.error != null;
     }
 
     @Override
