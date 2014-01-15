@@ -13,12 +13,11 @@ import com.xrigau.hnandroid.util.LoadingAdapter;
 
 class NewsAdapter extends LoadingAdapter {
 
-    private final NewsList news;
+    private final NewsList news = new NewsList();
     private final LayoutInflater inflater;
     private final Resources resources;
 
-    NewsAdapter(NewsList news, LayoutInflater inflater, Resources resources) {
-        this.news = news;
+    NewsAdapter(LayoutInflater inflater, Resources resources) {
         this.inflater = inflater;
         this.resources = resources;
     }
@@ -43,18 +42,24 @@ class NewsAdapter extends LoadingAdapter {
         return true;
     }
 
-    @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
-        if (convertView == null) {
-            convertView = inflater.inflate(R.layout.news_list_item, parent, false);
-            convertView.setTag(new ViewHolder(convertView));
-        }
+    void addNews(NewsList news) {
+        this.news.addAll(news);
+        notifyDataSetChanged();
+    }
 
-        ViewHolder holder = ViewHolder.from(convertView.getTag());
+    @Override
+    public View createView(int position, ViewGroup parent) {
+        View convertView = inflater.inflate(R.layout.news_list_item, parent, false);
+        convertView.setTag(new ViewHolder(convertView));
+        return convertView;
+    }
+
+    @Override
+    public View setUpView(View view, int position) {
+        ViewHolder holder = ViewHolder.from(view.getTag());
         News news = getItem(position);
         populateView(holder, news);
-
-        return convertView;
+        return view;
     }
 
     private void populateView(ViewHolder holder, News news) {

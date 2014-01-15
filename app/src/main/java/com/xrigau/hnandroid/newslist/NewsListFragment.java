@@ -13,7 +13,7 @@ import com.xrigau.hnandroid.core.model.News;
 import com.xrigau.hnandroid.core.model.NewsResponse;
 import com.xrigau.hnandroid.task.DetachableTaskListener;
 import com.xrigau.hnandroid.task.TaskResult;
-import com.xrigau.hnandroid.util.EmptyAdapter;
+import com.xrigau.hnandroid.util.OnNextPageRequestedListener;
 
 import static com.xrigau.hnandroid.core.task.TaskFactory.newsTask;
 
@@ -27,6 +27,7 @@ public class NewsListFragment extends HNFragment implements DetachableTaskListen
 
     private View loading;
     private AbsListView list;
+    private NewsAdapter newsAdapter;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -46,13 +47,13 @@ public class NewsListFragment extends HNFragment implements DetachableTaskListen
         super.onActivityCreated(savedInstanceState);
         restoreState(savedInstanceState);
 
-        list.setAdapter(new EmptyAdapter());
+        setUpList();
         startLoading();
         if (savedInstanceState != null) {
             execute(newsTask(currentPage), this);
             return;
         }
-        execute(newsTask(nextPage), this);
+        loadNextPage();
     }
 
     private void restoreState(Bundle savedInstanceState) {
@@ -61,6 +62,21 @@ public class NewsListFragment extends HNFragment implements DetachableTaskListen
         }
         currentPage = savedInstanceState.getString(CURRENT_PAGE_KEY);
         nextPage = savedInstanceState.getString(NEXT_PAGE_KEY);
+    }
+
+    private void setUpList() {
+        newsAdapter = new NewsAdapter(LayoutInflater.from(getActivity()), getResources());
+        newsAdapter.setOnNextPageRequestedListener(new OnNextPageRequestedListener() {
+            @Override
+            public void onNextPageRequested() {
+                loadNextPage();
+            }
+        });
+        list.setAdapter(newsAdapter);
+    }
+
+    private void loadNextPage() {
+        execute(newsTask(nextPage), this);
     }
 
     private void startLoading() {
@@ -83,7 +99,7 @@ public class NewsListFragment extends HNFragment implements DetachableTaskListen
         }
 
         NewsResponse response = taskResult.result;
-        list.setAdapter(new NewsAdapter(response.getNews(), LayoutInflater.from(getActivity()), getResources()));
+        newsAdapter.addNews(response.getNews());
         currentPage = response.getCurrentPage();
         nextPage = response.getNextPage();
     }

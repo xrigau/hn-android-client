@@ -6,6 +6,7 @@ import com.xrigau.hnandroid.core.service.Services;
 public class NewsTask extends BaseTask<NewsResponse> {
 
     static final String FIRST_PAGE = "news";
+    static final String SECOND_PAGE = "news2";
 
     private final String path;
 
@@ -19,7 +20,13 @@ public class NewsTask extends BaseTask<NewsResponse> {
 
     @Override
     public NewsResponse execute(Services services) {
-        return services.news(path);
+        if (FIRST_PAGE.equals(path)) {
+            return services.news();
+        } else if (SECOND_PAGE.equals(path)) {
+            return services.news2();
+        }
+
+        return services.news(new PageTokeDiscombobulator(path).getToken());
     }
 
     @Override
