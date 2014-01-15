@@ -15,17 +15,13 @@ public abstract class HNActivity extends Activity implements TaskResultDelegate 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        addTaskFragment();
-    }
 
-    private void addTaskFragment() {
         TaskFragment fragment = findTaskFragment();
-        if (fragment != null) {
+        if (alreadyAdded(fragment)) {
             taskFragment = fragment;
             return;
         }
-        taskFragment = new TaskFragment();
-        getFragmentManager().beginTransaction().add(taskFragment, getString(R.string.fragment_task_tag)).commit();
+        addTaskFragment();
     }
 
     private TaskFragment findTaskFragment() {
@@ -33,12 +29,25 @@ public abstract class HNActivity extends Activity implements TaskResultDelegate 
         return (TaskFragment) getFragmentManager().findFragmentByTag(tag);
     }
 
+    private boolean alreadyAdded(TaskFragment fragment) {
+        return fragment != null;
+    }
+
+    private void addTaskFragment() {
+        taskFragment = new TaskFragment();
+        getFragmentManager().beginTransaction().add(taskFragment, getString(R.string.fragment_task_tag)).commit();
+    }
+
     public <T> void execute(BaseTask<T> task) {
-        if (taskFragment == null) {
+        if (taskFragmentUnavailable()) {
             delegateResult(new TaskResult<T>(new TaskFragmentNotAvailableException()));
             return;
         }
         taskFragment.execute(task);
+    }
+
+    private boolean taskFragmentUnavailable() {
+        return taskFragment == null;
     }
 
     public void toast(int stringResource) {
