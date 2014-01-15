@@ -5,13 +5,10 @@ import android.os.Bundle;
 import android.widget.Toast;
 
 import com.xrigau.hnandroid.core.task.BaseTask;
-import com.xrigau.hnandroid.task.DetachableTaskListener;
-import com.xrigau.hnandroid.task.TaskFragment;
-import com.xrigau.hnandroid.task.TaskFragmentNotAvailableException;
-import com.xrigau.hnandroid.task.TaskResult;
+import com.xrigau.hnandroid.task.*;
 import com.xrigau.hnandroid.util.Navigator;
 
-public class HNActivity extends Activity {
+public abstract class HNActivity extends Activity implements TaskResultDelegate {
 
     private TaskFragment taskFragment;
 
@@ -36,12 +33,12 @@ public class HNActivity extends Activity {
         return (TaskFragment) getFragmentManager().findFragmentByTag(tag);
     }
 
-    public <T> void execute(BaseTask<T> task, DetachableTaskListener<T> listener) {
+    public <T> void execute(BaseTask<T> task) {
         if (taskFragment == null) {
-            listener.onLoadFinished(new TaskResult<T>(new TaskFragmentNotAvailableException()));
+            delegateResult(new TaskResult<T>(new TaskFragmentNotAvailableException()));
             return;
         }
-        taskFragment.execute(task, listener);
+        taskFragment.execute(task);
     }
 
     public void toast(int stringResource) {

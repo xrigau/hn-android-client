@@ -2,8 +2,9 @@ package com.xrigau.hnandroid.newslist;
 
 import android.os.Bundle;
 
-import com.xrigau.hnandroid.R;
 import com.xrigau.hnandroid.HNActivity;
+import com.xrigau.hnandroid.R;
+import com.xrigau.hnandroid.task.TaskResult;
 
 public class MainActivity extends HNActivity {
 
@@ -13,4 +14,11 @@ public class MainActivity extends HNActivity {
         setContentView(R.layout.activity_news_list);
     }
 
+    @Override
+    public void delegateResult(TaskResult taskResult) {
+        NewsListFragment newsListFragment = (NewsListFragment) getFragmentManager().findFragmentByTag(getString(R.string.fragment_news_list_tag));
+        if (newsListFragment != null && newsListFragment.isAdded()) {
+            newsListFragment.onLoadFinished(taskResult);
+        }
+    }
 }

@@ -8,20 +8,22 @@ import com.xrigau.hnandroid.BuildConfig;
 import com.xrigau.hnandroid.core.task.BaseTask;
 import com.xrigau.hnandroid.core.task.TaskExecutor;
 
-import java.util.Map;
-
 import retrofit.RetrofitError;
 
 final class HNAsyncTask<T> extends AsyncTask<TaskExecutor, Throwable, TaskResult<T>> {
 
+    interface OnAsyncTaskFinishedListener {
+        void onAsyncTaskFinished(BaseTask<?> task, TaskResult<?> taskResult);
+    }
+
     private final BaseTask<T> task;
     private final LruCache<BaseTask<?>, Object> responseCache;
-    private final Map<BaseTask<?>, DetachableTaskListener> tasksListeners;
+    private final OnAsyncTaskFinishedListener listener;
 
-    HNAsyncTask(BaseTask<T> task, LruCache<BaseTask<?>, Object> responseCache, Map<BaseTask<?>, DetachableTaskListener> tasksListeners) {
+    HNAsyncTask(BaseTask<T> task, LruCache<BaseTask<?>, Object> responseCache, OnAsyncTaskFinishedListener listener) {
         this.task = task;
         this.responseCache = responseCache;
-        this.tasksListeners = tasksListeners;
+        this.listener = listener;
     }
 
     @Override
@@ -47,14 +49,10 @@ final class HNAsyncTask<T> extends AsyncTask<TaskExecutor, Throwable, TaskResult
 
     @Override
     protected void onPostExecute(TaskResult<T> taskResult) {
-        DetachableTaskListener<T> listener = tasksListeners.remove(task);
         if (isSuccess(taskResult)) {
             responseCache.put(task, taskResult.result);
         }
-
-        if (listener.isAttached()) {
-            listener.onLoadFinished(taskResult);
-        }
+        listener.onAsyncTaskFinished(task, taskResult);
     }
 
     private boolean isSuccess(TaskResult taskResult) {

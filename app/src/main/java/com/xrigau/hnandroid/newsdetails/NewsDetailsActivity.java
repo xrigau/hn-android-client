@@ -5,6 +5,7 @@ import android.view.MenuItem;
 
 import com.xrigau.hnandroid.HNActivity;
 import com.xrigau.hnandroid.R;
+import com.xrigau.hnandroid.task.TaskResult;
 
 public class NewsDetailsActivity extends HNActivity {
 
@@ -24,5 +25,13 @@ public class NewsDetailsActivity extends HNActivity {
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void delegateResult(TaskResult taskResult) {
+        NewsDetailsFragment newsListFragment = (NewsDetailsFragment) getFragmentManager().findFragmentByTag(getString(R.string.fragment_news_details_tag));
+        if (newsListFragment != null && newsListFragment.isAdded()) {
+            newsListFragment.onLoadFinished(taskResult);
+        }
     }
 }

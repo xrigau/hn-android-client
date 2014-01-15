@@ -15,12 +15,12 @@ import com.xrigau.hnandroid.HNFragment;
 import com.xrigau.hnandroid.R;
 import com.xrigau.hnandroid.core.model.News;
 import com.xrigau.hnandroid.core.model.Summary;
-import com.xrigau.hnandroid.task.DetachableTaskListener;
+import com.xrigau.hnandroid.task.TaskListener;
 import com.xrigau.hnandroid.task.TaskResult;
 
 import static com.xrigau.hnandroid.core.task.TaskFactory.summaryTask;
 
-public class NewsDetailsFragment extends HNFragment implements DetachableTaskListener<Summary> {
+public class NewsDetailsFragment extends HNFragment implements TaskListener<Summary> {
 
     private static final String NEWS_KEY = "com.xrigau.hnandroid.NEWS_KEY";
 
@@ -90,7 +90,7 @@ public class NewsDetailsFragment extends HNFragment implements DetachableTaskLis
 
         startLoading();
         getActivity().getActionBar().setTitle(news.getTitle());
-        execute(summaryTask(news.getUrl()), this);
+        execute(summaryTask(news.getUrl()));
     }
 
     private void restoreState(Bundle savedInstanceState) {
@@ -104,11 +104,6 @@ public class NewsDetailsFragment extends HNFragment implements DetachableTaskLis
     private void startLoading() {
         content.setVisibility(View.GONE);
         loading.setVisibility(View.VISIBLE);
-    }
-
-    @Override
-    public boolean isAttached() {
-        return isAdded() && !isDetached();
     }
 
     @Override

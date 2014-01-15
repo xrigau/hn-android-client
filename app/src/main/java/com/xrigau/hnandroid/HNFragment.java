@@ -4,13 +4,12 @@ import android.app.Fragment;
 import android.util.Log;
 
 import com.xrigau.hnandroid.core.task.BaseTask;
-import com.xrigau.hnandroid.task.DetachableTaskListener;
 import com.xrigau.hnandroid.util.Navigator;
 
 public class HNFragment extends Fragment {
 
-    protected <T> void execute(BaseTask<T> task, DetachableTaskListener<T> listener) {
-        getHNActivity().execute(task, listener);
+    protected <T> void execute(BaseTask<T> task) {
+        getHNActivity().execute(task);
     }
 
     private HNActivity getHNActivity() {

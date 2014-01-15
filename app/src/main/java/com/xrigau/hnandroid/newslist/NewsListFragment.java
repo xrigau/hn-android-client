@@ -11,13 +11,13 @@ import com.xrigau.hnandroid.HNFragment;
 import com.xrigau.hnandroid.R;
 import com.xrigau.hnandroid.core.model.News;
 import com.xrigau.hnandroid.core.model.NewsResponse;
-import com.xrigau.hnandroid.task.DetachableTaskListener;
+import com.xrigau.hnandroid.task.TaskListener;
 import com.xrigau.hnandroid.task.TaskResult;
 import com.xrigau.hnandroid.util.OnNextPageRequestedListener;
 
 import static com.xrigau.hnandroid.core.task.TaskFactory.newsTask;
 
-public class NewsListFragment extends HNFragment implements DetachableTaskListener<NewsResponse>, AdapterView.OnItemClickListener {
+public class NewsListFragment extends HNFragment implements TaskListener<NewsResponse>, AdapterView.OnItemClickListener {
 
     private static final String CURRENT_PAGE_KEY = "com.xrigau.hnandroid.CURRENT_PAGE_KEY";
     private static final String NEXT_PAGE_KEY = "com.xrigau.hnandroid.NEXT_PAGE_KEY";
@@ -50,7 +50,7 @@ public class NewsListFragment extends HNFragment implements DetachableTaskListen
         setUpList();
         startLoading();
         if (savedInstanceState != null) {
-            execute(newsTask(currentPage), this);
+            execute(newsTask(currentPage));
             return;
         }
         loadNextPage();
@@ -76,17 +76,12 @@ public class NewsListFragment extends HNFragment implements DetachableTaskListen
     }
 
     private void loadNextPage() {
-        execute(newsTask(nextPage), this);
+        execute(newsTask(nextPage));
     }
 
     private void startLoading() {
         list.setVisibility(View.GONE);
         loading.setVisibility(View.VISIBLE);
-    }
-
-    @Override
-    public boolean isAttached() {
-        return isAdded() && !isDetached();
     }
 
     @Override
