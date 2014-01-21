@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+  <dimen name="news_image_height">300dp</dimen>
+  <dimen name="action_bar_height">48dip</dimen>
+
+</resources>

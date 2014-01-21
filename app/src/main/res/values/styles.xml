@@ -3,6 +3,7 @@
 
   <style name="HNTheme" parent="android:Theme.Holo.Light.DarkActionBar">
     <item name="android:actionBarStyle">@style/HNActionBar</item>
+    <item name="android:windowBackground">@color/app_background</item>
   </style>
 
   <style name="HNActionBar" parent="android:Widget.Holo.Light.ActionBar.Solid">
@@ -17,5 +18,16 @@
     <item name="android:shadowDx">1</item>
     <item name="android:shadowDy">1</item>
     <item name="android:shadowRadius">1</item>
+  </style>
+
+  <style name="HNTheme.NewsDetails">
+    <item name="android:windowBackground">@android:color/transparent</item>
+    <item name="android:windowActionBarOverlay">true</item>
+    <item name="android:actionBarStyle">@style/HNActionBar.Transparent</item>
+    <item name="android:windowContentOverlay">@null</item>
+  </style>
+
+  <style name="HNActionBar.Transparent">
+    <item name="android:background">@android:color/transparent</item>
   </style>
 </resources>
