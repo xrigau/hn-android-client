@@ -1,4 +1,4 @@
-package com.xrigau.hnandroid.util;
+package com.xrigau.hnandroid.newsdetails;
 
 import android.app.ActionBar;
 import android.graphics.drawable.ColorDrawable;
@@ -6,13 +6,17 @@ import android.graphics.drawable.Drawable;
 
 import com.xrigau.hnandroid.views.ObservableScrollView;
 
-public class ActionBarFadeHelper implements ObservableScrollView.OnScrollChangedListener {
+class ActionBarFadeHelper implements ObservableScrollView.OnScrollChangedListener {
+
+    private static final int OPAQUE = 255;
+    private static final int TRANSPARENT = 0;
+    private static final int MIN_OFFSET = 0;
 
     private final ActionBar actionBar;
     private final int maxScrollableHeight;
     private final Drawable actionBarDrawable;
 
-    public ActionBarFadeHelper(ActionBar actionBar, int maxScrollableHeight, int actionBarHeight, int color) {
+    ActionBarFadeHelper(ActionBar actionBar, int maxScrollableHeight, int actionBarHeight, int color) {
         this.actionBar = actionBar;
         this.maxScrollableHeight = maxScrollableHeight - actionBarHeight;
         this.actionBarDrawable = new ColorDrawable(color);
@@ -20,7 +24,7 @@ public class ActionBarFadeHelper implements ObservableScrollView.OnScrollChanged
     }
 
     private void init() {
-        actionBarDrawable.setAlpha(0);
+        actionBarDrawable.setAlpha(TRANSPARENT);
         actionBar.setBackgroundDrawable(actionBarDrawable);
     }
 
@@ -31,10 +35,10 @@ public class ActionBarFadeHelper implements ObservableScrollView.OnScrollChanged
     }
 
     private int clampOffset(int offsetY) {
-        return Math.min(Math.max(offsetY, 0), maxScrollableHeight);
+        return Math.min(Math.max(offsetY, MIN_OFFSET), maxScrollableHeight);
     }
 
     private void setAlpha(float alpha) {
-        actionBarDrawable.setAlpha((int) (alpha * 255));
+        actionBarDrawable.setAlpha((int) (alpha * OPAQUE));
     }
 }

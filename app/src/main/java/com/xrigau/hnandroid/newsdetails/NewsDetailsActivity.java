@@ -6,7 +6,6 @@ import android.view.MenuItem;
 import com.xrigau.hnandroid.HNActivity;
 import com.xrigau.hnandroid.R;
 import com.xrigau.hnandroid.task.TaskResult;
-import com.xrigau.hnandroid.util.ActionBarFadeHelper;
 import com.xrigau.hnandroid.views.ObservableScrollView;
 
 public class NewsDetailsActivity extends HNActivity {

@@ -11,7 +11,7 @@ import static com.xrigau.hnandroid.views.ObservableScrollView.OnScrollChangedLis
 
 public class NewsDetailsParallaxLayout extends FrameLayout implements OnScrollChangedListener {
 
-    private static final float PARALLAX_FRICTION_FACTOR = 0.5f;
+    private static final float PARALLAX_FRICTION_FACTOR = 0.4f;
 
     private View parallaxBackgroundView;
 
