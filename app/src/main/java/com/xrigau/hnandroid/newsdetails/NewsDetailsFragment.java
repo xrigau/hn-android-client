@@ -6,6 +6,7 @@ import android.text.Html;
 import android.text.TextUtils;
 import android.view.*;
 import android.widget.ImageView;
+import android.widget.ScrollView;
 import android.widget.ShareActionProvider;
 import android.widget.TextView;
 
@@ -70,9 +71,12 @@ public class NewsDetailsFragment extends HNFragment implements TaskListener<Summ
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View root = inflater.inflate(R.layout.fragment_news_details, container, false);
-        findViews(root);
-        return root;
+        return inflater.inflate(R.layout.fragment_news_details, container, false);
+    }
+
+    @Override
+    public void onViewCreated(View view, final Bundle savedInstanceState) {
+        findViews(view);
     }
 
     private void findViews(View root) {
@@ -116,6 +120,13 @@ public class NewsDetailsFragment extends HNFragment implements TaskListener<Summ
         }
         Summary response = taskResult.result;
         displaySummary(response);
+
+        resetScrollPositionBecauseItsBroken();
+    }
+
+    private void finishLoading() {
+        content.setVisibility(View.VISIBLE);
+        loading.setVisibility(View.GONE);
     }
 
     private boolean error(TaskResult taskResult) {
@@ -145,9 +156,20 @@ public class NewsDetailsFragment extends HNFragment implements TaskListener<Summ
         return content == null ? "" : content;
     }
 
-    private void finishLoading() {
-        content.setVisibility(View.VISIBLE);
-        loading.setVisibility(View.GONE);
+    private void resetScrollPositionBecauseItsBroken() {
+        if (getView() == null || getView().getViewTreeObserver() == null) {
+            return;
+        }
+
+        final ScrollView scrollView = (ScrollView) getView().findViewById(R.id.scroll);
+        getView().getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
+            @Override
+            public boolean onPreDraw() {
+                getView().getViewTreeObserver().removeOnPreDrawListener(this);
+                scrollView.scrollTo(0, 0);
+                return true;
+            }
+        });
     }
 
     @Override
