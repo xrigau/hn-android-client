@@ -23,6 +23,10 @@ final class HNAsyncTask<T> extends AsyncTask<TaskExecutor, Throwable, TaskResult
         this.listener = listener;
     }
 
+    void executeWith(TaskExecutor executor) {
+        executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, executor);
+    }
+
     @Override
     protected TaskResult<T> doInBackground(TaskExecutor... params) {
         TaskExecutor executor = params[0];

@@ -29,4 +29,8 @@ public class HNFragment extends Fragment {
     protected Navigator navigate() {
         return new Navigator(getActivity());
     }
+
+    protected void clearCache() {
+        getHNActivity().clearCache();
+    }
 }

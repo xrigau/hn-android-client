@@ -6,7 +6,10 @@ import android.util.LruCache;
 import android.widget.Toast;
 
 import com.xrigau.hnandroid.core.task.BaseTask;
-import com.xrigau.hnandroid.task.*;
+import com.xrigau.hnandroid.task.TaskFragment;
+import com.xrigau.hnandroid.task.TaskFragmentNotAvailableException;
+import com.xrigau.hnandroid.task.TaskResult;
+import com.xrigau.hnandroid.task.TaskResultDelegate;
 import com.xrigau.hnandroid.util.Navigator;
 
 public abstract class HNActivity extends Activity implements TaskResultDelegate {
@@ -85,4 +88,8 @@ public abstract class HNActivity extends Activity implements TaskResultDelegate 
     }
 
     protected abstract <T> void deliverResult(TaskResult<T> taskResult);
+
+    protected void clearCache() {
+        RESPONSE_CACHE.evictAll();
+    }
 }

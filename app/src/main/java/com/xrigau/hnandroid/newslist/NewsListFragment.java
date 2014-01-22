@@ -1,9 +1,7 @@
 package com.xrigau.hnandroid.newslist;
 
 import android.os.Bundle;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
+import android.view.*;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 
@@ -34,6 +32,7 @@ public class NewsListFragment extends HNFragment implements TaskListener<NewsRes
         View root = inflater.inflate(R.layout.fragment_news_list, container, false);
         findViews(root);
         list.setOnItemClickListener(this);
+        setHasOptionsMenu(true);
         return root;
     }
 
@@ -111,6 +110,27 @@ public class NewsListFragment extends HNFragment implements TaskListener<NewsRes
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         navigate().toDetails((News) list.getItemAtPosition(position));
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.activity_news_list, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.refresh) {
+            reload();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    private void reload() {
+        clearCache();
+        execute(newsTask());
+        setUpList();
+        startLoading();
     }
 
     @Override

@@ -43,9 +43,8 @@ public class TaskFragment extends Fragment implements HNAsyncTask.OnAsyncTaskFin
         }
 
         RUNNING_TASKS.add(task);
-        new HNAsyncTask<T>(task, this).execute(executor);
+        new HNAsyncTask<T>(task, this).executeWith(executor);
     }
-
 
     private boolean validDelegte() {
         return delegate != null;

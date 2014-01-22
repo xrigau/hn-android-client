@@ -7,9 +7,13 @@ public class TaskFactory {
 
     public static BaseTask<NewsResponse> newsTask(String page) {
         if (page == null || page.length() == 0) {
-            return new NewsTask();
+            return newsTask();
         }
         return new NewsTask(page);
+    }
+
+    public static BaseTask<NewsResponse> newsTask() {
+        return new NewsTask();
     }
 
     public static BaseTask<Summary> summaryTask(String url) {

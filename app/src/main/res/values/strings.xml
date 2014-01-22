@@ -18,5 +18,6 @@
   <string name="share">Share</string>
   <string name="open_in_browser">Open in browser</string>
   <string name="share_news_subject">Check out this news</string>
+  <string name="refresh">Refresh</string>
 
 </resources>
