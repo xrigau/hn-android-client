@@ -13,7 +13,8 @@
       android:id="@+id/image"
       android:layout_width="match_parent"
       android:layout_height="@dimen/news_image_height"
-      android:scaleType="centerCrop" />
+      android:scaleType="centerCrop"
+      android:contentDescription="@null" />
 
     <View
       android:layout_width="match_parent"
@@ -24,7 +25,7 @@
   <com.xrigau.hnandroid.views.ObservableScrollView
     android:id="@+id/scroll"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="match_parent">
 
     <RelativeLayout
       android:layout_width="match_parent"
@@ -56,9 +57,8 @@
         android:textAppearance="?android:textAppearanceMedium"
         android:layout_below="@id/image_placeholder"
         android:paddingTop="14dp"
-        android:paddingLeft="10dp"
-        android:paddingRight="10dp"
-        android:paddingBottom="14dp"
+        android:paddingLeft="14dp"
+        android:paddingRight="14dp"
         app:font="Roboto-Light"
         android:linksClickable="true"
         android:autoLink="web"

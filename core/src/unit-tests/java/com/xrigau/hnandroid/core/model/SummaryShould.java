@@ -10,13 +10,13 @@ public class SummaryShould {
 
     @Test
     public void createSummaryUsingBuilder() {
-        String expectedName = "someName";
+        String expectedTitle = "someTitle";
 
         Summary news = new Summary.Builder()
-                .name(expectedName)
+                .title(expectedTitle)
                 .build();
 
         assertNotNull(news);
-        assertThat(news.getName(), is(expectedName));
+        assertThat(news.getTitle(), is(expectedTitle));
     }
 }

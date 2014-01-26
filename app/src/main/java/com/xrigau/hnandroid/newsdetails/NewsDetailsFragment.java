@@ -3,7 +3,6 @@ package com.xrigau.hnandroid.newsdetails;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Html;
-import android.text.TextUtils;
 import android.view.*;
 import android.widget.ImageView;
 import android.widget.ScrollView;
@@ -135,25 +134,13 @@ public class NewsDetailsFragment extends HNFragment implements TaskListener<Summ
 
     private void displaySummary(Summary response) {
         new NovodaImageLoader.Builder(getActivity()).build().load(response.getImage(), image);
-        title.setText(getBestTitle(response));
+        title.setText(response.getTitle());
         setUpMainText(response);
     }
 
     private void setUpMainText(Summary response) {
-        String markdownText = getBestContent(response);
-        String htmlText = new AndDown().markdownToHtml(markdownText);
+        String htmlText = new AndDown().markdownToHtml(response.getText());
         text.setText(Html.fromHtml(htmlText));
-    }
-
-    private String getBestTitle(Summary response) {
-        String name = response.getName();
-        return TextUtils.isEmpty(name) ? news.getTitle() : name;
-    }
-
-    private String getBestContent(Summary response) {
-        String text = response.getText();
-        String content = TextUtils.isEmpty(text) ? response.getDescription() : text;
-        return content == null ? "" : content;
     }
 
     private void resetScrollPositionBecauseItsBroken() {
