@@ -2,14 +2,12 @@ package com.xrigau.hnandroid.newsdetails;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.text.Html;
 import android.view.*;
 import android.widget.ImageView;
 import android.widget.ScrollView;
 import android.widget.ShareActionProvider;
 import android.widget.TextView;
 
-import com.commonsware.cwac.anddown.AndDown;
 import com.novoda.imageloader.NovodaImageLoader;
 import com.xrigau.hnandroid.HNFragment;
 import com.xrigau.hnandroid.R;
@@ -139,8 +137,7 @@ public class NewsDetailsFragment extends HNFragment implements TaskListener<Summ
     }
 
     private void setUpMainText(Summary response) {
-        String htmlText = new AndDown().markdownToHtml(response.getText());
-        text.setText(Html.fromHtml(htmlText));
+        SummaryContent.from(response).into(text);
     }
 
     private void resetScrollPositionBecauseItsBroken() {
