@@ -1,15 +1,15 @@
 package com.xrigau.hnandroid.newsdetails;
 
-import android.text.Html;
-import android.text.Spanned;
+import android.text.method.LinkMovementMethod;
 import android.widget.TextView;
 
-import com.commonsware.cwac.anddown.AndDown;
 import com.xrigau.hnandroid.core.model.Summary;
+
+import in.uncod.android.bypass.Bypass;
 
 class SummaryContent {
 
-    private final Spanned converted;
+    private final CharSequence converted;
 
     static SummaryContent from(Summary summary) {
         return new SummaryContent(summary.getText());
@@ -19,13 +19,13 @@ class SummaryContent {
         converted = convert(content);
     }
 
-    private Spanned convert(String content) {
-        String htmlText = new AndDown().markdownToHtml(content);
-        return Html.fromHtml(htmlText);
+    private CharSequence convert(String content) {
+        return new Bypass().markdownToSpannable(content);
     }
 
     void into(TextView textView) {
         textView.setText(converted);
+        textView.setMovementMethod(LinkMovementMethod.getInstance());
     }
 
 }
