@@ -1,6 +1,6 @@
 buildscript {
     dependencies {
-        classpath 'com.android.tools.build:gradle:0.7.+'
+        classpath 'com.android.tools.build:gradle:0.8.+'
     }
 }
 
@@ -9,7 +9,7 @@ apply plugin: 'android'
 dependencies {
     compile project(":core")
     compile 'com.novoda.imageloader:imageloader-core:1.6.+'
-    compile 'com.commonsware.cwac:anddown:0.2.0'
+    instrumentTestCompile "com.google.android:android-espresso-bundled:1.0.0-SNAPSHOT"
 }
 
 android {
@@ -25,15 +25,9 @@ android {
     }
 
     deviceProvider new GenymotionDeviceProvider(project.plugins.findPlugin('android').getSdkParser())
-    testBuildType "mockServer"
 
     buildTypes {
-        mockServer {
-            signingConfig signingConfigs.debug
-            dependencies {
-                compile "com.google.android:android-espresso-bundled:1.0.0-SNAPSHOT"
-            }
-
+        test {
             buildConfigField "retrofit.client.Client", "HTTP_CLIENT", "new com.xrigau.hnandroid.core.debug.MockClient()"
         }
     }

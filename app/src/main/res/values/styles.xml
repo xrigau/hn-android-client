@@ -12,7 +12,7 @@
   </style>
 
   <style name="HNActionBarText" parent="@android:style/TextAppearance.Holo.Widget.ActionBar.Title">
-    <item name="android:fontFamily">sans-serif-condensed</item>
+    <!--<item name="android:fontFamily">sans-serif-condensed</item>--> <!-- TODO Figure out how to do this -->
     <item name="android:textColor">@android:color/white</item>
     <item name="android:shadowColor">#141414</item>
     <item name="android:shadowDx">1</item>
