@@ -9,6 +9,11 @@ public class TaskResult<T> {
         this.error = error;
     }
 
+    public TaskResult(T result) {
+        this.result = result;
+        this.error = null;
+    }
+
     public TaskResult(T result, Throwable error) {
         this.result = result;
         this.error = error;

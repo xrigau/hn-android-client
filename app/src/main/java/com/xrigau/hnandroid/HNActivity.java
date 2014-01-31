@@ -1,6 +1,7 @@
 package com.xrigau.hnandroid;
 
 import android.app.Activity;
+import android.app.Fragment;
 import android.os.Bundle;
 import android.util.LruCache;
 import android.widget.Toast;
@@ -49,14 +50,14 @@ public abstract class HNActivity extends Activity implements TaskResultDelegate 
         Toast.makeText(this, stringResource, Toast.LENGTH_LONG).show();
     }
 
-    protected Navigator navigate() {
-        return new Navigator(this);
+    protected boolean isFragmentAttached(Fragment fragment) {
+        return fragment != null && fragment.isAdded();
     }
 
     public <T> void execute(BaseTask<T> task) {
         T result = (T) RESPONSE_CACHE.get(task);
         if (isCached(result)) {
-            deliverResult(new TaskResult<T>(result, null));
+            deliverResult(new TaskResult<T>(result));
             return;
         }
 
