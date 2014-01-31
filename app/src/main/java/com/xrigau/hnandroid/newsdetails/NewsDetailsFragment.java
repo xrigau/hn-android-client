@@ -118,7 +118,7 @@ public class NewsDetailsFragment extends HNFragment implements TaskListener<Summ
         Summary response = taskResult.result;
         displaySummary(response);
 
-        resetScrollPositionBecauseItsBroken();
+        resetScrollPositionBecauseSometimesItsWrongIfDataWasCached();
     }
 
     private void finishLoading() {
@@ -137,10 +137,10 @@ public class NewsDetailsFragment extends HNFragment implements TaskListener<Summ
     }
 
     private void setUpMainText(Summary response) {
-        SummaryContent.from(response).into(text);
+        SummaryParser.from(response).into(text);
     }
 
-    private void resetScrollPositionBecauseItsBroken() {
+    private void resetScrollPositionBecauseSometimesItsWrongIfDataWasCached() {
         if (getView() == null || getView().getViewTreeObserver() == null) {
             return;
         }
