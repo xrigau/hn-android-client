@@ -10,11 +10,11 @@ public class NewsShould {
 
     @Test
     public void createNewsUsingBuilder() {
-        String expectedTitle = "someTitle";
+        String expectedUrl = "someUrl";
 
-        News news = new News.Builder().title(expectedTitle).build();
+        News news = new News.Builder().url(expectedUrl).build();
 
         assertNotNull(news);
-        assertThat(news.getTitle(), is(expectedTitle));
+        assertThat(news.getUrl(), is(expectedUrl));
     }
 }

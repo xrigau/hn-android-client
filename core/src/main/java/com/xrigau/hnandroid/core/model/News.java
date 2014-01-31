@@ -73,7 +73,7 @@ public class News implements Serializable {
 
         News news = (News) o;
 
-        if (!title.equals(news.title)) {
+        if (!url.equals(news.url)) {
             return false;
         }
 
@@ -82,7 +82,7 @@ public class News implements Serializable {
 
     @Override
     public int hashCode() {
-        return title.hashCode();
+        return url.hashCode();
     }
 
     public static class Builder {
@@ -149,5 +149,5 @@ public class News implements Serializable {
             return new News(title, url, domain, points, user, userUrl, timestamp, comments, commentsUrl);
         }
     }
-    
+
 }
