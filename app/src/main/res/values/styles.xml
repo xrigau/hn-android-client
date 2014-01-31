@@ -21,7 +21,6 @@
   </style>
 
   <style name="HNTheme.NewsDetails">
-    <item name="android:windowBackground">@android:color/transparent</item>
     <item name="android:windowActionBarOverlay">true</item>
     <item name="android:actionBarStyle">@style/HNActionBar.Transparent</item>
     <item name="android:windowContentOverlay">@null</item>
