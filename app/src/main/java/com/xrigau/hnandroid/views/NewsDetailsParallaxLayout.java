@@ -62,7 +62,7 @@ public class NewsDetailsParallaxLayout extends FrameLayout implements OnScrollCh
 
     private boolean drawClippedView(Canvas canvas, View child, long drawingTime, float bottom) {
         canvas.save();
-        canvas.clipRect(getTop(), getLeft(), getRight(), bottom);
+        canvas.clipRect(getLeft(), getTop(), getRight(), bottom);
         boolean result = super.drawChild(canvas, child, drawingTime);
         canvas.restore();
         return result;
