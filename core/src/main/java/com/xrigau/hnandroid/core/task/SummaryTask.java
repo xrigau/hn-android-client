@@ -16,26 +16,4 @@ public class SummaryTask implements Task<Summary> {
         return services.summary(url);
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-
-        SummaryTask that = (SummaryTask) o;
-
-        if (!url.equals(that.url)) {
-            return false;
-        }
-
-        return true;
-    }
-
-    @Override
-    public int hashCode() {
-        return url.hashCode();
-    }
 }

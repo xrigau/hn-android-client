@@ -20,11 +20,6 @@ public class TaskExecutor {
         enableLog = true;
     }
 
-    public TaskExecutor(Client client, boolean enableLog) {
-        this.client = client;
-        this.enableLog = enableLog;
-    }
-
     public <T> T execute(Task<T> task) {
         RestAdapter restAdapter = new RestAdapter.Builder()
                 .setServer(API_URL)

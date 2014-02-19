@@ -29,26 +29,4 @@ public class NewsTask implements Task<NewsResponse> {
         return services.news(new PageTokenDiscombobulator(path).getToken());
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-
-        NewsTask newsTask = (NewsTask) o;
-
-        if (!path.equals(newsTask.path)) {
-            return false;
-        }
-
-        return true;
-    }
-
-    @Override
-    public int hashCode() {
-        return path.hashCode();
-    }
 }
