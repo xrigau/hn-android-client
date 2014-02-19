@@ -3,7 +3,7 @@ package com.xrigau.hnandroid.core.task;
 import com.xrigau.hnandroid.core.model.NewsResponse;
 import com.xrigau.hnandroid.core.service.Services;
 
-public class NewsTask extends BaseTask<NewsResponse> {
+public class NewsTask implements Task<NewsResponse> {
 
     static final String FIRST_PAGE = "news";
     static final String SECOND_PAGE = "news2";
