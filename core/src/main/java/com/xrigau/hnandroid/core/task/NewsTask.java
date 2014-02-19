@@ -26,7 +26,7 @@ public class NewsTask extends BaseTask<NewsResponse> {
             return services.news2();
         }
 
-        return services.news(new PageTokeDiscombobulator(path).getToken());
+        return services.news(new PageTokenDiscombobulator(path).getToken());
     }
 
     @Override

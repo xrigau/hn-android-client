@@ -1,5 +1,6 @@
 package com.xrigau.hnandroid.newsdetails;
 
+import android.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.*;
@@ -9,16 +10,13 @@ import android.widget.ShareActionProvider;
 import android.widget.TextView;
 
 import com.novoda.imageloader.NovodaImageLoader;
-import com.xrigau.hnandroid.HNFragment;
 import com.xrigau.hnandroid.R;
 import com.xrigau.hnandroid.core.model.News;
 import com.xrigau.hnandroid.core.model.Summary;
-import com.xrigau.hnandroid.task.TaskListener;
-import com.xrigau.hnandroid.task.TaskResult;
 
-import static com.xrigau.hnandroid.core.task.TaskFactory.summaryTask;
+import static com.xrigau.hnandroid.util.Navigator.navigate;
 
-public class NewsDetailsFragment extends HNFragment implements TaskListener<Summary> {
+public class NewsDetailsFragment extends Fragment {
 
     private static final String NEWS_KEY = "com.xrigau.hnandroid.NEWS_KEY";
 
@@ -51,8 +49,8 @@ public class NewsDetailsFragment extends HNFragment implements TaskListener<Summ
     private Intent getShareIntent() {
         return new Intent(Intent.ACTION_SEND)
                 .setType("text/plain")
-                .putExtra(Intent.EXTRA_SUBJECT, getString(R.string.share_news_subject))
-                .putExtra(Intent.EXTRA_TEXT, news.getTitle() + " – " + news.getUrl());
+                .putExtra(Intent.EXTRA_SUBJECT, news.getTitle())
+                .putExtra(Intent.EXTRA_TEXT, getString(R.string.share_news_content, news.getUrl()));
     }
 
     @Override
@@ -60,7 +58,7 @@ public class NewsDetailsFragment extends HNFragment implements TaskListener<Summ
         int id = item.getItemId();
         switch (id) {
             case R.id.browser:
-                navigate().toExternalAndroidBrowser(news.getUrl());
+                navigate(getActivity()).toExternalAndroidBrowser(news.getUrl());
                 return true;
         }
         return super.onOptionsItemSelected(item);
@@ -91,7 +89,6 @@ public class NewsDetailsFragment extends HNFragment implements TaskListener<Summ
 
         startLoading();
         getActivity().getActionBar().setTitle(news.getTitle());
-        execute(summaryTask(news.getUrl()));
     }
 
     private void restoreState(Bundle savedInstanceState) {
@@ -107,27 +104,9 @@ public class NewsDetailsFragment extends HNFragment implements TaskListener<Summ
         loading.setVisibility(View.VISIBLE);
     }
 
-    @Override
-    public void onLoadFinished(TaskResult<Summary> taskResult) {
-        finishLoading();
-        if (error(taskResult)) {
-            log(taskResult.error);
-            toast(R.string.generic_error_oops);
-            return;
-        }
-        Summary response = taskResult.result;
-        displaySummary(response);
-
-        resetScrollPositionBecauseSometimesItsWrongIfDataWasCached();
-    }
-
     private void finishLoading() {
         content.setVisibility(View.VISIBLE);
         loading.setVisibility(View.GONE);
-    }
-
-    private boolean error(TaskResult taskResult) {
-        return taskResult.result == null && taskResult.error != null;
     }
 
     private void displaySummary(Summary response) {

@@ -1,14 +1,13 @@
 package com.xrigau.hnandroid.newsdetails;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.view.MenuItem;
 
-import com.xrigau.hnandroid.HNActivity;
 import com.xrigau.hnandroid.R;
-import com.xrigau.hnandroid.task.TaskResult;
 import com.xrigau.hnandroid.views.ObservableScrollView;
 
-public class NewsDetailsActivity extends HNActivity {
+public class NewsDetailsActivity extends Activity {
 
     public static final String EXTRA_NEWS = "com.xrigau.hnandroid.EXTRA_NEWS";
 
@@ -31,17 +30,9 @@ public class NewsDetailsActivity extends HNActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
-            finish(); // TODO: Implement proper navigation
+            finish(); // TODO: Implement proper navigation using parentActivity
             return true;
         }
         return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    public void deliverResult(TaskResult taskResult) {
-        NewsDetailsFragment newsListFragment = (NewsDetailsFragment) getFragmentManager().findFragmentByTag(getString(R.string.fragment_news_details_tag));
-        if (isFragmentAttached(newsListFragment)) {
-            newsListFragment.onLoadFinished(taskResult);
-        }
     }
 }

@@ -12,7 +12,11 @@ public class Navigator {
 
     private final Context context;
 
-    public Navigator(Context context) {
+    public static Navigator navigate(Context context) {
+        return new Navigator(context);
+    }
+
+    private Navigator(Context context) {
         this.context = context;
     }
 

@@ -10,7 +10,7 @@ import java.util.List;
 public abstract class LoadingAdapter extends BaseAdapter implements HNAdapter {
 
     private static final int POSITIONS_AHEAD_TO_START_LOADING = 6;
-    private final List<Integer> alreadyRequestedPostions = new ArrayList<Integer>();
+    private final List<Integer> alreadyRequestedPositions = new ArrayList<Integer>();
 
     private OnNextPageRequestedListener onNextPageRequestListener;
 
@@ -31,7 +31,7 @@ public abstract class LoadingAdapter extends BaseAdapter implements HNAdapter {
     }
 
     private boolean notAlreadyLoaded(int position) {
-        return !alreadyRequestedPostions.contains(position);
+        return !alreadyRequestedPositions.contains(position);
     }
 
     private boolean validListener() {
