@@ -13,6 +13,7 @@ import com.xrigau.hnandroid.core.model.News;
 import com.xrigau.hnandroid.core.model.NewsResponse;
 import com.xrigau.hnandroid.util.OnNextPageRequestedListener;
 
+import rx.Observable;
 import rx.Observer;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
@@ -49,55 +50,57 @@ public class NewsListFragment extends Fragment implements AdapterView.OnItemClic
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        restoreState(savedInstanceState);
-
         setUpList();
         showLoading();
 
-        fetchNews().subscribeOn(Schedulers.newThread()).observeOn(AndroidSchedulers.mainThread()).subscribe(new Observer<NewsResponse>() {
-            @Override
-            public void onCompleted() {
-                hideLoading();
-            }
-
-            @Override
-            public void onError(Throwable e) {
-                hideLoading();
-                toast(R.string.generic_error_oops);
-                log("Error downloading news list", e);
-            }
-
-            @Override
-            public void onNext(NewsResponse newsResponse) {
-                newsAdapter.addNews(newsResponse.getNews());
-            }
-        });
-    }
-
-    private void toast(int resourceId) {
-        Toast.makeText(getActivity(), resourceId, Toast.LENGTH_SHORT).show();
-    }
-
-    private void log(String message, Throwable error) {
-        Log.e(message, error);
+        if (savedInstanceState != null) {
+            restoreState(savedInstanceState);
+            loadPage(fetchNews(currentPage)); // TODO: Not working properly
+        } else {
+            loadPage(fetchNews());
+        }
     }
 
     private void restoreState(Bundle savedInstanceState) {
-        if (savedInstanceState == null) {
-            return;
-        }
         currentPage = savedInstanceState.getString(CURRENT_PAGE_KEY);
         nextPage = savedInstanceState.getString(NEXT_PAGE_KEY);
     }
 
     private void setUpList() {
         newsAdapter = new NewsAdapter(LayoutInflater.from(getActivity()), getResources());
-        newsAdapter.setOnNextPageRequestedListener(new OnNextPageRequestedListener() {
+        newsAdapter.setOnNextPageRequestedListener(new OnNextPageRequestedListener() { // TODO: Should be an Observer
             @Override
             public void onNextPageRequested() {
+                loadPage(fetchNews(nextPage));
             }
         });
         list.setAdapter(newsAdapter);
+    }
+
+    private void loadPage(Observable<NewsResponse> newsObservable) {
+        newsObservable
+                .subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<NewsResponse>() {
+                    @Override
+                    public void onCompleted() {
+                        hideLoading();
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        hideLoading();
+                        toast(R.string.generic_error_oops);
+                        log("Error downloading news list", e);
+                    }
+
+                    @Override
+                    public void onNext(NewsResponse newsResponse) {
+                        newsAdapter.addNews(newsResponse.getNews());
+                        nextPage = newsResponse.getNextPage();
+                        currentPage = newsResponse.getCurrentPage();
+                    }
+                });
     }
 
     private void showLoading() {
@@ -108,6 +111,14 @@ public class NewsListFragment extends Fragment implements AdapterView.OnItemClic
     private void hideLoading() {
         list.setVisibility(View.VISIBLE);
         loading.setVisibility(View.GONE);
+    }
+
+    private void toast(int resourceId) {
+        Toast.makeText(getActivity(), resourceId, Toast.LENGTH_SHORT).show();
+    }
+
+    private void log(String message, Throwable error) {
+        Log.e(message, error);
     }
 
     @Override
@@ -132,6 +143,8 @@ public class NewsListFragment extends Fragment implements AdapterView.OnItemClic
     private void reload() {
         setUpList();
         showLoading();
+
+        loadPage(fetchNews());
     }
 
     @Override
