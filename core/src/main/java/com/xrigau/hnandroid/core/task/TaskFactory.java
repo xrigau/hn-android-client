@@ -21,7 +21,7 @@ public class TaskFactory {
         return observableFrom(newsTask(page));
     }
 
-    public static Task<NewsResponse> newsTask(String page) {
+    private static Task<NewsResponse> newsTask(String page) {
         return new NewsTask(page);
     }
 
@@ -29,7 +29,7 @@ public class TaskFactory {
         return observableFrom(summaryTask(url));
     }
 
-    public static Task<Summary> summaryTask(String url) {
+    private static Task<Summary> summaryTask(String url) {
         return new SummaryTask(url);
     }
 

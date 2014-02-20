@@ -5,15 +5,21 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.*;
 import android.widget.ImageView;
-import android.widget.ScrollView;
 import android.widget.ShareActionProvider;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.novoda.imageloader.NovodaImageLoader;
+import com.novoda.notils.logger.simple.Log;
 import com.xrigau.hnandroid.R;
 import com.xrigau.hnandroid.core.model.News;
 import com.xrigau.hnandroid.core.model.Summary;
 
+import rx.Observer;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
+
+import static com.xrigau.hnandroid.core.task.TaskFactory.fetchSummary;
 import static com.xrigau.hnandroid.util.Navigator.navigate;
 
 public class NewsDetailsFragment extends Fragment {
@@ -87,8 +93,10 @@ public class NewsDetailsFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
         restoreState(savedInstanceState);
 
-        startLoading();
         getActivity().getActionBar().setTitle(news.getTitle());
+        showLoading();
+
+        loadSummary();
     }
 
     private void restoreState(Bundle savedInstanceState) {
@@ -99,14 +107,33 @@ public class NewsDetailsFragment extends Fragment {
         }
     }
 
-    private void startLoading() {
-        content.setVisibility(View.GONE);
-        loading.setVisibility(View.VISIBLE);
+    private void loadSummary() {
+        fetchSummary(news.getUrl())
+                .subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<Summary>() {
+                    @Override
+                    public void onNext(Summary summary) {
+                        displaySummary(summary);
+                    }
+
+                    @Override
+                    public void onCompleted() {
+                        hideLoading();
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        hideLoading();
+                        toast(R.string.generic_error_oops);
+                        log("Error downloading news list", e);
+                    }
+                });
     }
 
-    private void finishLoading() {
-        content.setVisibility(View.VISIBLE);
-        loading.setVisibility(View.GONE);
+    private void showLoading() {
+        content.setVisibility(View.GONE);
+        loading.setVisibility(View.VISIBLE);
     }
 
     private void displaySummary(Summary response) {
@@ -119,20 +146,17 @@ public class NewsDetailsFragment extends Fragment {
         SummaryParser.from(response).into(text);
     }
 
-    private void resetScrollPositionBecauseSometimesItsWrongIfDataWasCached() {
-        if (getView() == null || getView().getViewTreeObserver() == null) {
-            return;
-        }
+    private void hideLoading() {
+        content.setVisibility(View.VISIBLE);
+        loading.setVisibility(View.GONE);
+    }
 
-        final ScrollView scrollView = (ScrollView) getView().findViewById(R.id.scroll);
-        getView().getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
-            @Override
-            public boolean onPreDraw() {
-                getView().getViewTreeObserver().removeOnPreDrawListener(this);
-                scrollView.scrollTo(0, 0);
-                return true;
-            }
-        });
+    private void toast(int resourceId) {
+        Toast.makeText(getActivity(), resourceId, Toast.LENGTH_SHORT).show();
+    }
+
+    private void log(String message, Throwable error) {
+        Log.e(message, error);
     }
 
     @Override

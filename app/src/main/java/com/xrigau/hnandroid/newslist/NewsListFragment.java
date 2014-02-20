@@ -83,6 +83,13 @@ public class NewsListFragment extends Fragment implements AdapterView.OnItemClic
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<NewsResponse>() {
                     @Override
+                    public void onNext(NewsResponse newsResponse) {
+                        newsAdapter.addNews(newsResponse.getNews());
+                        nextPage = newsResponse.getNextPage();
+                        currentPage = newsResponse.getCurrentPage();
+                    }
+
+                    @Override
                     public void onCompleted() {
                         hideLoading();
                     }
@@ -92,13 +99,6 @@ public class NewsListFragment extends Fragment implements AdapterView.OnItemClic
                         hideLoading();
                         toast(R.string.generic_error_oops);
                         log("Error downloading news list", e);
-                    }
-
-                    @Override
-                    public void onNext(NewsResponse newsResponse) {
-                        newsAdapter.addNews(newsResponse.getNews());
-                        nextPage = newsResponse.getNextPage();
-                        currentPage = newsResponse.getCurrentPage();
                     }
                 });
     }
