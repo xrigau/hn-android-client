@@ -1,42 +1,27 @@
 package com.xrigau.hnandroid.newsdetails;
 
-import android.os.AsyncTask;
-import android.text.method.LinkMovementMethod;
-import android.widget.TextView;
-
-import com.xrigau.hnandroid.core.model.Summary;
-
 import in.uncod.android.bypass.Bypass;
+import rx.Observable;
+import rx.Subscriber;
 
 class SummaryParser {
 
-    private final String content;
-
-    static SummaryParser from(Summary summary) {
-        return new SummaryParser(summary.getText());
-    }
-
-    private SummaryParser(String content) {
-        this.content = content;
-    }
-
-    void into(final TextView textView) {
-
-        new AsyncTask<Void, Void, CharSequence>() {
+    public static Observable<CharSequence> parseMarkdown(final String summary) {
+        return Observable.create(new Observable.OnSubscribe<CharSequence>() {
             @Override
-            protected CharSequence doInBackground(Void... params) {
-                return new Bypass().markdownToSpannable(content);
-            }
-
-            @Override
-            protected void onPostExecute(CharSequence converted) {
-                if (textView == null) {
-                    return;
+            public void call(Subscriber<? super CharSequence> subscriber) {
+                try {
+                    subscriber.onNext(toSpannable(summary));
+                    subscriber.onCompleted();
+                } catch (Throwable error) {
+                    subscriber.onError(error);
                 }
-                textView.setText(converted);
-                textView.setMovementMethod(LinkMovementMethod.getInstance());
             }
-        }.execute();
+        });
+    }
+
+    private static CharSequence toSpannable(String summary) {
+        return new Bypass().markdownToSpannable(summary);
     }
 
 }

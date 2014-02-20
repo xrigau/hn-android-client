@@ -96,9 +96,9 @@ public class NewsListFragment extends Fragment implements AdapterView.OnItemClic
 
                     @Override
                     public void onError(Throwable e) {
+                        log("Error downloading news list", e);
                         hideLoading();
                         toast(R.string.generic_error_oops);
-                        log("Error downloading news list", e);
                     }
                 });
     }

@@ -20,6 +20,7 @@ import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
 import static com.xrigau.hnandroid.core.task.TaskFactory.fetchSummary;
+import static com.xrigau.hnandroid.newsdetails.SummaryParser.parseMarkdown;
 import static com.xrigau.hnandroid.util.Navigator.navigate;
 
 public class NewsDetailsFragment extends Fragment {
@@ -124,9 +125,9 @@ public class NewsDetailsFragment extends Fragment {
 
                     @Override
                     public void onError(Throwable e) {
+                        log("Error downloading news summary", e);
                         hideLoading();
                         toast(R.string.generic_error_oops);
-                        log("Error downloading news list", e);
                     }
                 });
     }
@@ -142,8 +143,26 @@ public class NewsDetailsFragment extends Fragment {
         setUpMainText(response);
     }
 
-    private void setUpMainText(Summary response) {
-        SummaryParser.from(response).into(text);
+    private void setUpMainText(Summary summary) { // TODO: There must be a way to combine this and the other observer
+        parseMarkdown(summary.getText())
+                .subscribeOn(Schedulers.computation())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<CharSequence>() {
+                    @Override
+                    public void onCompleted() {
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        log("Error parsing markdown", e);
+                        toast(R.string.generic_error_oops);
+                    }
+
+                    @Override
+                    public void onNext(CharSequence charSequence) {
+                        text.setText(charSequence);
+                    }
+                });
     }
 
     private void hideLoading() {
