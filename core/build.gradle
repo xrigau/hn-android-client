@@ -2,8 +2,7 @@ apply plugin: 'java'
 
 dependencies {
     compile 'com.squareup.retrofit:retrofit:1.2.+',
-            'com.netflix.rxjava:rxjava-core:0.17.+',
-            'com.netflix.rxjava:rxjava-android:0.17.+'
+            'com.netflix.rxjava:rxjava-core:0.17.+'
 
     testCompile 'junit:junit:4.+',
             'org.mockito:mockito-all:1.8.+'

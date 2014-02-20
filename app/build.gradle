@@ -9,7 +9,9 @@ apply plugin: 'android'
 dependencies {
     compile project(":core"),
             'com.novoda.imageloader:imageloader-core:1.6.+',
-            'com.novoda:notils:2.2.1'
+            'com.novoda:notils:2.2.1',
+            'com.netflix.rxjava:rxjava-android:0.17.+'
+
     instrumentTestCompile "com.google.android:android-espresso-bundled:1.0.0-SNAPSHOT"
 }
 
