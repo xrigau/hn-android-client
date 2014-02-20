@@ -37,7 +37,12 @@ public class TaskFactory {
         return Observable.create(new Observable.OnSubscribe<T>() {
             @Override
             public void call(Subscriber<? super T> subscriber) {
-                new TaskExecutor(new UrlConnectionClient()).execute(task);
+                try {
+                    subscriber.onNext(new TaskExecutor(new UrlConnectionClient()).execute(task));
+                    subscriber.onCompleted();
+                } catch (Throwable error) {
+                    subscriber.onError(error);
+                }
             }
         });
     }
