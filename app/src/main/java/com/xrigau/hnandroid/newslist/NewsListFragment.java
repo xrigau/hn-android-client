@@ -67,10 +67,9 @@ public class NewsListFragment extends Fragment implements AdapterView.OnItemClic
     }
 
     private void setUpList() {
-        newsAdapter = new NewsAdapter(LayoutInflater.from(getActivity()), getResources());
-        newsAdapter.setOnNextPageRequestedListener(new OnNextPageRequestedListener() { // TODO: Should be an Observer
+        newsAdapter = new NewsAdapter(LayoutInflater.from(getActivity()), getResources(), new Action1<String>() {
             @Override
-            public void onNextPageRequested() {
+            public void call(String nextPage) {
                 loadPage(fetchNews(nextPage));
             }
         });

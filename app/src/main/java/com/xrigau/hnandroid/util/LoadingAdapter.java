@@ -7,17 +7,25 @@ import android.widget.BaseAdapter;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class LoadingAdapter extends BaseAdapter implements HNAdapter {
+import rx.Observer;
+import rx.Subscriber;
+import rx.observers.Subscribers;
+
+public abstract class LoadingAdapter<T> extends BaseAdapter implements HNAdapter {
 
     private static final int POSITIONS_AHEAD_TO_START_LOADING = 6;
-    private final List<Integer> alreadyRequestedPositions = new ArrayList<Integer>();
 
-    private OnNextPageRequestedListener onNextPageRequestListener;
+    private final List<Integer> alreadyRequestedPositions = new ArrayList<Integer>();
+    private final Subscriber<T> paginationSubscriber;
+
+    protected LoadingAdapter(Observer<? super T> observer) {
+        paginationSubscriber = Subscribers.from(observer);
+    }
 
     @Override
     public final View getView(int position, View convertView, ViewGroup parent) {
-        if (isCloseToEnd(position) && notAlreadyLoaded(position) && validListener()) {
-            onNextPageRequestListener.onNextPageRequested();
+        if (isCloseToEnd(position) && notAlreadyLoaded(position)) {
+            paginationSubscriber.onNext(getNextPage());
         }
 
         if (convertView == null) {
@@ -34,11 +42,6 @@ public abstract class LoadingAdapter extends BaseAdapter implements HNAdapter {
         return !alreadyRequestedPositions.contains(position);
     }
 
-    private boolean validListener() {
-        return onNextPageRequestListener != null;
-    }
+    protected abstract T getNextPage();
 
-    public void setOnNextPageRequestedListener(OnNextPageRequestedListener onNextPageRequestListener) {
-        this.onNextPageRequestListener = onNextPageRequestListener;
-    }
 }

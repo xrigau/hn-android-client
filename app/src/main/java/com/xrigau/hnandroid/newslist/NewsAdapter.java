@@ -9,15 +9,20 @@ import android.widget.TextView;
 import com.xrigau.hnandroid.R;
 import com.xrigau.hnandroid.core.model.News;
 import com.xrigau.hnandroid.core.model.NewsList;
+import com.xrigau.hnandroid.core.model.NewsResponse;
 import com.xrigau.hnandroid.util.LoadingAdapter;
 
-class NewsAdapter extends LoadingAdapter {
+import rx.functions.Action1;
+import rx.observers.Observers;
+
+class NewsAdapter extends LoadingAdapter<String> {
 
     private final NewsList news = new NewsList();
     private final LayoutInflater inflater;
     private final Resources resources;
 
-    NewsAdapter(LayoutInflater inflater, Resources resources) {
+    NewsAdapter(LayoutInflater inflater, Resources resources, Action1<? super String> observer) {
+        super(Observers.create(observer));
         this.inflater = inflater;
         this.resources = resources;
     }
