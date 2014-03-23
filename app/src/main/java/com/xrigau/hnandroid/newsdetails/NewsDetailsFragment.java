@@ -19,7 +19,7 @@ import rx.Observer;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
-import static com.xrigau.hnandroid.core.task.TaskFactory.fetchSummary;
+import static com.xrigau.hnandroid.task.TaskFactory.fetchSummary;
 import static com.xrigau.hnandroid.newsdetails.SummaryParser.parseSummary;
 import static com.xrigau.hnandroid.util.Navigator.navigate;
 

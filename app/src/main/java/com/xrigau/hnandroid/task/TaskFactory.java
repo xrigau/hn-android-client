@@ -1,9 +1,13 @@
-package com.xrigau.hnandroid.core.task;
+package com.xrigau.hnandroid.task;
 
+import com.xrigau.hnandroid.BuildConfig;
 import com.xrigau.hnandroid.core.model.NewsResponse;
 import com.xrigau.hnandroid.core.model.Summary;
+import com.xrigau.hnandroid.core.task.NewsTask;
+import com.xrigau.hnandroid.core.task.SummaryTask;
+import com.xrigau.hnandroid.core.task.Task;
+import com.xrigau.hnandroid.core.task.TaskExecutor;
 
-import retrofit.client.UrlConnectionClient;
 import rx.Observable;
 import rx.Subscriber;
 
@@ -38,7 +42,7 @@ public class TaskFactory {
             @Override
             public void call(Subscriber<? super T> subscriber) {
                 try {
-                    subscriber.onNext(new TaskExecutor(new UrlConnectionClient()).execute(task));
+                    subscriber.onNext(new TaskExecutor(BuildConfig.HTTP_CLIENT).execute(task));
                     subscriber.onCompleted();
                 } catch (Throwable error) {
                     subscriber.onError(error);
