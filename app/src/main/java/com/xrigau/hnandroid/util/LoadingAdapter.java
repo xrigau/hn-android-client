@@ -26,6 +26,7 @@ public abstract class LoadingAdapter<T> extends BaseAdapter implements HNAdapter
     public final View getView(int position, View convertView, ViewGroup parent) {
         if (isCloseToEnd(position) && notAlreadyLoaded(position)) {
             paginationSubscriber.onNext(getNextPage());
+            alreadyRequestedPositions.add(position);
         }
 
         if (convertView == null) {
