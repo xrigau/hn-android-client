@@ -1,6 +1,6 @@
 buildscript {
     dependencies {
-        classpath 'com.android.tools.build:gradle:0.8.+'
+        classpath 'com.android.tools.build:gradle:0.9.+'
     }
 }
 
@@ -9,15 +9,15 @@ apply plugin: 'android'
 dependencies {
     compile project(":core"),
             'com.novoda.imageloader:imageloader-core:1.6.+',
-            'com.novoda:notils:2.2.1',
+            'com.novoda:notils:2.2.+',
             'com.netflix.rxjava:rxjava-android:0.17.+'
 
-    instrumentTestCompile "com.google.android:android-espresso-bundled:1.0.0-SNAPSHOT"
+    androidTestCompile "com.google.android:android-espresso-bundled:1.1.0-SNAPSHOT"
 }
 
 android {
     compileSdkVersion 19
-    buildToolsVersion "19.0.1"
+    buildToolsVersion "19.0.3"
 
     defaultConfig {
         minSdkVersion 14
@@ -27,34 +27,10 @@ android {
         buildConfigField "retrofit.client.Client", "HTTP_CLIENT", "new retrofit.client.UrlConnectionClient()"
     }
 
-    deviceProvider new GenymotionDeviceProvider(project.plugins.findPlugin('android').getSdkParser())
-
-    buildTypes {
-        test {
+    productFlavors {
+        live
+        mockServer {
             buildConfigField "retrofit.client.Client", "HTTP_CLIENT", "new com.xrigau.hnandroid.core.debug.MockClient()"
         }
-    }
-}
-
-class GenymotionDeviceProvider extends com.android.builder.testing.ConnectedDeviceProvider {
-    GenymotionDeviceProvider(com.android.builder.SdkParser sdkParser) {
-        super(sdkParser)
-    }
-
-    public String getName() {
-        return "genymotion" // Run with 'gradle genymotionInstrumentTest'
-    }
-
-    public List<? extends com.android.builder.testing.api.DeviceConnector> getDevices() {
-        List localDevices = super.getDevices()
-        def matchingDevices = localDevices.grep {
-            it.getApiLevel() > 16 &&
-                    it.iDevice.getProperty("ro.product.manufacturer") == 'Genymotion'
-        }
-
-        if (matchingDevices.size() == 0) {
-            throw new IllegalArgumentException("Couldn't find any connected device that matches [${getName()}] provider.")
-        }
-        matchingDevices
     }
 }
