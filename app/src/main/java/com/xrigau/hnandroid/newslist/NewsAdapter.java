@@ -21,6 +21,9 @@ class NewsAdapter extends LoadingAdapter<String> {
     private final LayoutInflater inflater;
     private final Resources resources;
 
+    private String currentPage;
+    private String nextPage;
+
     NewsAdapter(LayoutInflater inflater, Resources resources, Action1<? super String> observer) {
         super(Observers.create(observer));
         this.inflater = inflater;
@@ -39,7 +42,7 @@ class NewsAdapter extends LoadingAdapter<String> {
 
     @Override
     public long getItemId(int position) {
-        return getItem(position).hashCode();
+        return position;
     }
 
     @Override
@@ -47,8 +50,10 @@ class NewsAdapter extends LoadingAdapter<String> {
         return true;
     }
 
-    void addNews(NewsList news) {
-        this.news.addAll(news);
+    void addNews(NewsResponse newsResponse) {
+        news.addAll(newsResponse.getNews());
+        currentPage = newsResponse.getCurrentPage();
+        nextPage = newsResponse.getNextPage();
         notifyDataSetChanged();
     }
 
@@ -77,6 +82,15 @@ class NewsAdapter extends LoadingAdapter<String> {
     private void updateCommentsView(ViewHolder holder, int comments) {
         String formatted = resources.getQuantityString(R.plurals.comments, comments, comments);
         holder.comments.setText(formatted);
+    }
+
+    @Override
+    protected String getNextPage() {
+        return nextPage;
+    }
+
+    public NewsResponse asNewsResponse() {
+        return new NewsResponse(news, currentPage, nextPage);
     }
 
     private static class ViewHolder {

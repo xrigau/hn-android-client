@@ -11,23 +11,20 @@ import com.novoda.notils.logger.simple.Log;
 import com.xrigau.hnandroid.R;
 import com.xrigau.hnandroid.core.model.News;
 import com.xrigau.hnandroid.core.model.NewsResponse;
-import com.xrigau.hnandroid.util.OnNextPageRequestedListener;
 
 import rx.Observable;
 import rx.Observer;
 import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action1;
 import rx.schedulers.Schedulers;
 
-import static com.xrigau.hnandroid.core.task.TaskFactory.fetchNews;
+import static com.xrigau.hnandroid.task.TaskFactory.fetchNews;
+import static com.xrigau.hnandroid.task.TaskFactory.restoreNewsResponse;
 import static com.xrigau.hnandroid.util.Navigator.navigate;
 
 public class NewsListFragment extends Fragment implements AdapterView.OnItemClickListener {
 
-    private static final String CURRENT_PAGE_KEY = "com.xrigau.hnandroid.CURRENT_PAGE_KEY";
-    private static final String NEXT_PAGE_KEY = "com.xrigau.hnandroid.NEXT_PAGE_KEY";
-
-    private String currentPage;
-    private String nextPage;
+    public static final String NEWS_RESPONSE = "com.xrigau.hnandroid.NEWS_RESPONSE";
 
     private View loading;
     private AbsListView list;
@@ -54,16 +51,10 @@ public class NewsListFragment extends Fragment implements AdapterView.OnItemClic
         showLoading();
 
         if (savedInstanceState != null) {
-            restoreState(savedInstanceState);
-            loadPage(fetchNews(currentPage)); // TODO: Not working properly
+            loadPage(restoreNewsResponse(savedInstanceState));
         } else {
             loadPage(fetchNews());
         }
-    }
-
-    private void restoreState(Bundle savedInstanceState) {
-        currentPage = savedInstanceState.getString(CURRENT_PAGE_KEY);
-        nextPage = savedInstanceState.getString(NEXT_PAGE_KEY);
     }
 
     private void setUpList() {
@@ -83,9 +74,7 @@ public class NewsListFragment extends Fragment implements AdapterView.OnItemClic
                 .subscribe(new Observer<NewsResponse>() {
                     @Override
                     public void onNext(NewsResponse newsResponse) {
-                        newsAdapter.addNews(newsResponse.getNews());
-                        nextPage = newsResponse.getNextPage();
-                        currentPage = newsResponse.getCurrentPage();
+                        newsAdapter.addNews(newsResponse);
                     }
 
                     @Override
@@ -149,7 +138,6 @@ public class NewsListFragment extends Fragment implements AdapterView.OnItemClic
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putString(CURRENT_PAGE_KEY, currentPage);
-        outState.putString(NEXT_PAGE_KEY, nextPage);
+        outState.putSerializable(NEWS_RESPONSE, newsAdapter.asNewsResponse());
     }
 }

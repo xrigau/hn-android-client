@@ -1,5 +1,7 @@
 package com.xrigau.hnandroid.task;
 
+import android.os.Bundle;
+
 import com.xrigau.hnandroid.BuildConfig;
 import com.xrigau.hnandroid.core.model.NewsResponse;
 import com.xrigau.hnandroid.core.model.Summary;
@@ -7,6 +9,7 @@ import com.xrigau.hnandroid.core.task.NewsTask;
 import com.xrigau.hnandroid.core.task.SummaryTask;
 import com.xrigau.hnandroid.core.task.Task;
 import com.xrigau.hnandroid.core.task.TaskExecutor;
+import com.xrigau.hnandroid.newslist.NewsListFragment;
 
 import rx.Observable;
 import rx.Subscriber;
@@ -47,6 +50,17 @@ public class TaskFactory {
                 } catch (Throwable error) {
                     subscriber.onError(error);
                 }
+            }
+        });
+    }
+
+    public static Observable<NewsResponse> restoreNewsResponse(final Bundle savedInstanceState) {
+        return Observable.create(new Observable.OnSubscribe<NewsResponse>() {
+            @Override
+            public void call(Subscriber<? super NewsResponse> subscriber) {
+                NewsResponse newsResponse = (NewsResponse) savedInstanceState.getSerializable(NewsListFragment.NEWS_RESPONSE);
+                subscriber.onNext(newsResponse);
+                subscriber.onCompleted();
             }
         });
     }
