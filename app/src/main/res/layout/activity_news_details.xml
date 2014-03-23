@@ -1,6 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<fragment xmlns:android="http://schemas.android.com/apk/res/android"
-  class="com.xrigau.hnandroid.newsdetails.NewsDetailsFragment"
-  android:tag="@string/fragment_news_details_tag"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
   android:layout_width="match_parent"
-  android:layout_height="match_parent" />
+  android:layout_height="match_parent"
+  android:orientation="vertical">
+
+  <fragment
+    class="com.xrigau.hnandroid.newsdetails.NewsDetailsFragment"
+    android:tag="@string/fragment_news_details_tag"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" />
+
+  <View
+    android:id="@+id/system_bar_tint_overlay"
+    style="@style/SystemBarTint" />
+</FrameLayout>

@@ -93,10 +93,7 @@ public class NewsDetailsFragment extends Fragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         restoreState(savedInstanceState);
-
-        getActivity().getActionBar().setTitle(news.getTitle());
         showLoading();
-
         loadSummary();
     }
 

@@ -27,7 +27,7 @@
     <activity
       android:name=".newsdetails.NewsDetailsActivity"
       android:theme="@style/HNTheme.NewsDetails"
-      android:label="@string/news_details_title" />
+      android:label="" />
 
   </application>
 

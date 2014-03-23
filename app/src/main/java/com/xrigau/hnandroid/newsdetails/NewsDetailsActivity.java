@@ -3,7 +3,9 @@ package com.xrigau.hnandroid.newsdetails;
 import android.app.Activity;
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.view.View;
 
+import com.novoda.notils.caster.Views;
 import com.xrigau.hnandroid.R;
 import com.xrigau.hnandroid.views.ObservableScrollView;
 
@@ -20,10 +22,11 @@ public class NewsDetailsActivity extends Activity {
 
     private void setUpActionBar() {
         getActionBar().setDisplayHomeAsUpEnabled(true);
+        View systemBarTintOverlay = Views.findById(this, R.id.system_bar_tint_overlay);
         int imageHeight = getResources().getDimensionPixelSize(R.dimen.news_image_height);
         int actionBarHeight = getResources().getDimensionPixelSize(R.dimen.action_bar_height);
         int actionBarColor = getResources().getColor(R.color.action_bar_background);
-        ActionBarFadeHelper actionBarFadeHelper = new ActionBarFadeHelper(getActionBar(), imageHeight, actionBarHeight, actionBarColor);
+        ActionBarFadeHelper actionBarFadeHelper = new ActionBarFadeHelper(getActionBar(), systemBarTintOverlay, imageHeight, actionBarHeight, actionBarColor);
         ((ObservableScrollView) findViewById(R.id.scroll)).addOnScrollChangedListener(actionBarFadeHelper);
     }
 

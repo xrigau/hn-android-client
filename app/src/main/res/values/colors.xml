@@ -2,6 +2,6 @@
 <resources>
 
   <color name="app_background">@android:color/background_light</color>
-  <color name="action_bar_background">#FF8800</color>
+  <color name="action_bar_background">#FF9F05</color>
 
 </resources>

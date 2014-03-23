@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+  <style name="HNTheme" parent="android:Theme.Holo.Light.DarkActionBar">
+    <item name="android:actionBarStyle">@style/HNActionBar</item>
+    <item name="android:windowBackground">@color/app_background</item>
+    <item name="android:windowTranslucentStatus">true</item>
+    <item name="android:windowTranslucentNavigation">true</item>
+  </style>
+
+  <style name="SystemBarTint">
+    <item name="android:layout_width">match_parent</item>
+    <item name="android:layout_height">@dimen/default_system_bar_height</item>
+    <item name="android:background">@color/action_bar_background</item>
+  </style>
+
+  <style name="ActionBarPlaceHolder">
+    <item name="android:layout_width">match_parent</item>
+    <item name="android:layout_height">?android:actionBarSize</item>
+  </style>
+
+</resources>

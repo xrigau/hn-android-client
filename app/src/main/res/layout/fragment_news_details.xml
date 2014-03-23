@@ -18,7 +18,7 @@
 
     <View
       android:layout_width="match_parent"
-      android:layout_height="40dp"
+      android:layout_height="@dimen/news_top_shadow_height"
       android:background="@drawable/news_parallax_top_shadow" />
   </FrameLayout>
 
@@ -39,7 +39,7 @@
 
       <View
         android:layout_width="match_parent"
-        android:layout_height="20dp"
+        android:layout_height="12dp"
         android:layout_alignBottom="@id/image_placeholder"
         android:background="@drawable/news_title_background" />
 
