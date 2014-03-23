@@ -1,6 +1,10 @@
 package com.xrigau.hnandroid.core.model;
 
-public class NewsResponse {
+import java.io.Serializable;
+
+public class NewsResponse implements Serializable {
+
+    private static final long serialVersionUID = 476566476345866584L;
 
     private final NewsList items;
     private final String currentPage;
