@@ -37,29 +37,33 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/news_image_height" />
 
-      <TextView
+      <View
+        android:layout_width="match_parent"
+        android:layout_height="20dp"
+        android:layout_alignBottom="@id/image_placeholder"
+        android:background="@drawable/news_title_background" />
+
+      <com.xrigau.hnandroid.views.CustomFontTextView
         android:id="@+id/title"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:textAppearance="?android:textAppearanceLargeInverse"
-        android:layout_alignBottom="@id/image_placeholder"
-        android:background="@drawable/news_title_background"
+        android:textAppearance="?android:textAppearanceLarge"
+        android:layout_below="@id/image_placeholder"
         android:paddingTop="18dp"
-        android:paddingLeft="6dp"
-        android:paddingRight="6dp"
-        android:paddingBottom="6dp"
-        android:fontFamily="sans-serif-condensed" />
+        android:paddingLeft="14dp"
+        android:paddingRight="14dp"
+        android:paddingBottom="18dp"
+        app:font="RobotoSlab-Regular" />
 
       <com.xrigau.hnandroid.views.CustomFontTextView
         android:id="@+id/text"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:textAppearance="?android:textAppearanceMedium"
-        android:layout_below="@id/image_placeholder"
-        android:paddingTop="14dp"
+        android:layout_below="@id/title"
         android:paddingLeft="14dp"
         android:paddingRight="14dp"
-        app:font="Roboto-Light"
+        app:font="RobotoSlab-Light"
         android:linksClickable="true"
         android:autoLink="web"
         android:textIsSelectable="true" />
