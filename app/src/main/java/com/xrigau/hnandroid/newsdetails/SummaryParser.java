@@ -1,17 +1,31 @@
 package com.xrigau.hnandroid.newsdetails;
 
+import com.xrigau.hnandroid.core.model.ParsedSummary;
+import com.xrigau.hnandroid.core.model.Summary;
+
 import in.uncod.android.bypass.Bypass;
 import rx.Observable;
 import rx.Subscriber;
+import rx.functions.Func1;
 
 class SummaryParser {
 
-    public static Observable<CharSequence> parseMarkdown(final String summary) {
-        return Observable.create(new Observable.OnSubscribe<CharSequence>() {
+    public static Func1<Summary, Observable<ParsedSummary>> parseSummary() {
+        return new Func1<Summary, Observable<ParsedSummary>>() {
             @Override
-            public void call(Subscriber<? super CharSequence> subscriber) {
+            public Observable<ParsedSummary> call(Summary summary) {
+                return parseMarkdown(summary);
+            }
+        };
+    }
+
+    private static Observable<ParsedSummary> parseMarkdown(final Summary summary) {
+        return Observable.create(new Observable.OnSubscribe<ParsedSummary>() {
+            @Override
+            public void call(Subscriber<? super ParsedSummary> subscriber) {
                 try {
-                    subscriber.onNext(toSpannable(summary));
+                    CharSequence parsedMarkdown = toSpannable(summary.getText());
+                    subscriber.onNext(new ParsedSummary(summary, parsedMarkdown));
                     subscriber.onCompleted();
                 } catch (Throwable error) {
                     subscriber.onError(error);

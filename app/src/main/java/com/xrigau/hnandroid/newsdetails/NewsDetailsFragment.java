@@ -13,14 +13,14 @@ import com.novoda.imageloader.NovodaImageLoader;
 import com.novoda.notils.logger.simple.Log;
 import com.xrigau.hnandroid.R;
 import com.xrigau.hnandroid.core.model.News;
-import com.xrigau.hnandroid.core.model.Summary;
+import com.xrigau.hnandroid.core.model.ParsedSummary;
 
 import rx.Observer;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
 import static com.xrigau.hnandroid.core.task.TaskFactory.fetchSummary;
-import static com.xrigau.hnandroid.newsdetails.SummaryParser.parseMarkdown;
+import static com.xrigau.hnandroid.newsdetails.SummaryParser.parseSummary;
 import static com.xrigau.hnandroid.util.Navigator.navigate;
 
 public class NewsDetailsFragment extends Fragment {
@@ -110,11 +110,12 @@ public class NewsDetailsFragment extends Fragment {
 
     private void loadSummary() {
         fetchSummary(news.getUrl())
+                .flatMap(parseSummary())
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Observer<Summary>() {
+                .subscribe(new Observer<ParsedSummary>() {
                     @Override
-                    public void onNext(Summary summary) {
+                    public void onNext(ParsedSummary summary) {
                         displaySummary(summary);
                     }
 
@@ -137,32 +138,10 @@ public class NewsDetailsFragment extends Fragment {
         loading.setVisibility(View.VISIBLE);
     }
 
-    private void displaySummary(Summary response) {
-        new NovodaImageLoader.Builder(getActivity()).build().load(response.getImage(), image);
+    private void displaySummary(ParsedSummary response) {
+        new NovodaImageLoader.Builder(getActivity()).build().load(response.getImage(), image); // TODO Hide when no image available
         title.setText(response.getTitle());
-        setUpMainText(response);
-    }
-
-    private void setUpMainText(Summary summary) { // TODO: There must be a way to combine this and the other observer
-        parseMarkdown(summary.getText())
-                .subscribeOn(Schedulers.computation())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Observer<CharSequence>() {
-                    @Override
-                    public void onCompleted() {
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        log("Error parsing markdown", e);
-                        toast(R.string.generic_error_oops);
-                    }
-
-                    @Override
-                    public void onNext(CharSequence charSequence) {
-                        text.setText(charSequence);
-                    }
-                });
+        text.setText(response.getParsedMarkdown());
     }
 
     private void hideLoading() {
