@@ -2,6 +2,6 @@ package com.xrigau.hnandroid.core.task;
 
 import com.xrigau.hnandroid.core.service.Services;
 
-interface Task<T> {
-    T execute(Services services);
+public interface Task<T> {
+    public T execute(Services services);
 }

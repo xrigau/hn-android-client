@@ -4,6 +4,8 @@ import java.io.Serializable;
 
 public class News implements Serializable {
 
+    private static final long serialVersionUID = 345783456643584L;
+
     private final String title;
     private final String url;
     private final String domain;

@@ -36,7 +36,6 @@ public class ObservableScrollView extends ScrollView {
                 for (OnScrollChangedListener listener : observers) {
                     listener.onVerticalScrollChanged(getScrollY());
                 }
-                requestLayout();
             }
         });
     }

@@ -1,42 +1,41 @@
 package com.xrigau.hnandroid.newsdetails;
 
-import android.os.AsyncTask;
-import android.text.method.LinkMovementMethod;
-import android.widget.TextView;
-
+import com.xrigau.hnandroid.core.model.ParsedSummary;
 import com.xrigau.hnandroid.core.model.Summary;
 
 import in.uncod.android.bypass.Bypass;
+import rx.Observable;
+import rx.Subscriber;
+import rx.functions.Func1;
 
 class SummaryParser {
 
-    private final String content;
-
-    static SummaryParser from(Summary summary) {
-        return new SummaryParser(summary.getText());
-    }
-
-    private SummaryParser(String content) {
-        this.content = content;
-    }
-
-    void into(final TextView textView) {
-
-        new AsyncTask<Void, Void, CharSequence>() {
+    public static Func1<Summary, Observable<ParsedSummary>> parseSummary() {
+        return new Func1<Summary, Observable<ParsedSummary>>() {
             @Override
-            protected CharSequence doInBackground(Void... params) {
-                return new Bypass().markdownToSpannable(content);
+            public Observable<ParsedSummary> call(Summary summary) {
+                return parseMarkdown(summary);
             }
+        };
+    }
 
+    private static Observable<ParsedSummary> parseMarkdown(final Summary summary) {
+        return Observable.create(new Observable.OnSubscribe<ParsedSummary>() {
             @Override
-            protected void onPostExecute(CharSequence converted) {
-                if (textView == null) {
-                    return;
+            public void call(Subscriber<? super ParsedSummary> subscriber) {
+                try {
+                    CharSequence parsedMarkdown = toSpannable(summary.getText());
+                    subscriber.onNext(new ParsedSummary(summary, parsedMarkdown));
+                    subscriber.onCompleted();
+                } catch (Throwable error) {
+                    subscriber.onError(error);
                 }
-                textView.setText(converted);
-                textView.setMovementMethod(LinkMovementMethod.getInstance());
             }
-        }.execute();
+        });
+    }
+
+    private static CharSequence toSpannable(String summary) {
+        return new Bypass().markdownToSpannable(summary);
     }
 
 }

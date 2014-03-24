@@ -8,6 +8,7 @@
   <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
   <application
+    android:name=".HNApplication"
     android:allowBackup="true"
     android:theme="@style/HNTheme"
     android:icon="@drawable/ic_launcher"
@@ -26,7 +27,7 @@
     <activity
       android:name=".newsdetails.NewsDetailsActivity"
       android:theme="@style/HNTheme.NewsDetails"
-      android:label="@string/news_details_title" />
+      android:label="" />
 
   </application>
 

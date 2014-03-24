@@ -9,15 +9,23 @@ import android.widget.TextView;
 import com.xrigau.hnandroid.R;
 import com.xrigau.hnandroid.core.model.News;
 import com.xrigau.hnandroid.core.model.NewsList;
+import com.xrigau.hnandroid.core.model.NewsResponse;
 import com.xrigau.hnandroid.util.LoadingAdapter;
 
-class NewsAdapter extends LoadingAdapter {
+import rx.functions.Action1;
+import rx.observers.Observers;
+
+class NewsAdapter extends LoadingAdapter<String> {
 
     private final NewsList news = new NewsList();
     private final LayoutInflater inflater;
     private final Resources resources;
 
-    NewsAdapter(LayoutInflater inflater, Resources resources) {
+    private String currentPage;
+    private String nextPage;
+
+    NewsAdapter(LayoutInflater inflater, Resources resources, Action1<? super String> observer) {
+        super(Observers.create(observer));
         this.inflater = inflater;
         this.resources = resources;
     }
@@ -34,7 +42,7 @@ class NewsAdapter extends LoadingAdapter {
 
     @Override
     public long getItemId(int position) {
-        return getItem(position).hashCode();
+        return position;
     }
 
     @Override
@@ -42,8 +50,10 @@ class NewsAdapter extends LoadingAdapter {
         return true;
     }
 
-    void addNews(NewsList news) {
-        this.news.addAll(news);
+    void addNews(NewsResponse newsResponse) {
+        news.addAll(newsResponse.getNews());
+        currentPage = newsResponse.getCurrentPage();
+        nextPage = newsResponse.getNextPage();
         notifyDataSetChanged();
     }
 
@@ -72,6 +82,15 @@ class NewsAdapter extends LoadingAdapter {
     private void updateCommentsView(ViewHolder holder, int comments) {
         String formatted = resources.getQuantityString(R.plurals.comments, comments, comments);
         holder.comments.setText(formatted);
+    }
+
+    @Override
+    protected String getNextPage() {
+        return nextPage;
+    }
+
+    public NewsResponse asNewsResponse() {
+        return new NewsResponse(news, currentPage, nextPage);
     }
 
     private static class ViewHolder {

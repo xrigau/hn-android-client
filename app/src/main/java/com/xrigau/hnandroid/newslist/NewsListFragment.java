@@ -1,27 +1,30 @@
 package com.xrigau.hnandroid.newslist;
 
+import android.app.Fragment;
 import android.os.Bundle;
 import android.view.*;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
+import android.widget.Toast;
 
-import com.xrigau.hnandroid.HNFragment;
+import com.novoda.notils.logger.simple.Log;
 import com.xrigau.hnandroid.R;
 import com.xrigau.hnandroid.core.model.News;
 import com.xrigau.hnandroid.core.model.NewsResponse;
-import com.xrigau.hnandroid.task.TaskListener;
-import com.xrigau.hnandroid.task.TaskResult;
-import com.xrigau.hnandroid.util.OnNextPageRequestedListener;
 
-import static com.xrigau.hnandroid.core.task.TaskFactory.newsTask;
+import rx.Observable;
+import rx.Observer;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action1;
+import rx.schedulers.Schedulers;
 
-public class NewsListFragment extends HNFragment implements TaskListener<NewsResponse>, AdapterView.OnItemClickListener {
+import static com.xrigau.hnandroid.task.TaskFactory.fetchNews;
+import static com.xrigau.hnandroid.task.TaskFactory.restoreNewsResponse;
+import static com.xrigau.hnandroid.util.Navigator.navigate;
 
-    private static final String CURRENT_PAGE_KEY = "com.xrigau.hnandroid.CURRENT_PAGE_KEY";
-    private static final String NEXT_PAGE_KEY = "com.xrigau.hnandroid.NEXT_PAGE_KEY";
+public class NewsListFragment extends Fragment implements AdapterView.OnItemClickListener {
 
-    private String currentPage;
-    private String nextPage;
+    public static final String NEWS_RESPONSE = "com.xrigau.hnandroid.NEWS_RESPONSE";
 
     private View loading;
     private AbsListView list;
@@ -44,72 +47,71 @@ public class NewsListFragment extends HNFragment implements TaskListener<NewsRes
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        restoreState(savedInstanceState);
-
         setUpList();
-        startLoading();
-        if (savedInstanceState != null) {
-            execute(newsTask(currentPage));
-            return;
-        }
-        loadNextPage();
-    }
+        showLoading();
 
-    private void restoreState(Bundle savedInstanceState) {
-        if (savedInstanceState == null) {
-            return;
+        if (savedInstanceState != null) {
+            loadPage(restoreNewsResponse(savedInstanceState));
+        } else {
+            loadPage(fetchNews());
         }
-        currentPage = savedInstanceState.getString(CURRENT_PAGE_KEY);
-        nextPage = savedInstanceState.getString(NEXT_PAGE_KEY);
     }
 
     private void setUpList() {
-        newsAdapter = new NewsAdapter(LayoutInflater.from(getActivity()), getResources());
-        newsAdapter.setOnNextPageRequestedListener(new OnNextPageRequestedListener() {
+        newsAdapter = new NewsAdapter(LayoutInflater.from(getActivity()), getResources(), new Action1<String>() {
             @Override
-            public void onNextPageRequested() {
-                loadNextPage();
+            public void call(String nextPage) {
+                loadPage(fetchNews(nextPage));
             }
         });
         list.setAdapter(newsAdapter);
     }
 
-    private void loadNextPage() {
-        execute(newsTask(nextPage));
+    private void loadPage(Observable<NewsResponse> newsObservable) {
+        newsObservable
+                .subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<NewsResponse>() {
+                    @Override
+                    public void onNext(NewsResponse newsResponse) {
+                        newsAdapter.addNews(newsResponse);
+                    }
+
+                    @Override
+                    public void onCompleted() {
+                        hideLoading();
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        log("Error downloading news list", e);
+                        hideLoading();
+                        toast(R.string.generic_error_oops);
+                    }
+                });
     }
 
-    private void startLoading() {
+    private void showLoading() {
         list.setVisibility(View.GONE);
         loading.setVisibility(View.VISIBLE);
     }
 
-    @Override
-    public void onLoadFinished(TaskResult<NewsResponse> taskResult) {
-        finishLoading();
-        if (error(taskResult)) {
-            log(taskResult.error);
-            toast(R.string.generic_error_oops);
-            return;
-        }
-
-        NewsResponse response = taskResult.result;
-        newsAdapter.addNews(response.getNews());
-        currentPage = response.getCurrentPage();
-        nextPage = response.getNextPage();
-    }
-
-    private boolean error(TaskResult taskResult) {
-        return taskResult.result == null && taskResult.error != null;
-    }
-
-    private void finishLoading() {
+    private void hideLoading() {
         list.setVisibility(View.VISIBLE);
         loading.setVisibility(View.GONE);
     }
 
+    private void toast(int resourceId) {
+        Toast.makeText(getActivity(), resourceId, Toast.LENGTH_SHORT).show();
+    }
+
+    private void log(String message, Throwable error) {
+        Log.e(message, error);
+    }
+
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        navigate().toDetails((News) list.getItemAtPosition(position));
+        navigate(getActivity()).toDetails((News) list.getItemAtPosition(position));
     }
 
     @Override
@@ -127,16 +129,15 @@ public class NewsListFragment extends HNFragment implements TaskListener<NewsRes
     }
 
     private void reload() {
-        clearCache();
-        execute(newsTask());
         setUpList();
-        startLoading();
+        showLoading();
+
+        loadPage(fetchNews());
     }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putString(CURRENT_PAGE_KEY, currentPage);
-        outState.putString(NEXT_PAGE_KEY, nextPage);
+        outState.putSerializable(NEWS_RESPONSE, newsAdapter.asNewsResponse());
     }
 }

@@ -1,12 +1,12 @@
 package com.xrigau.hnandroid.core.task;
 
 
-class PageTokeDiscombobulator {
+class PageTokenDiscombobulator {
 
     private static final String TOKEN_PREFIX = "x?fnid=";
     private final String token;
 
-    PageTokeDiscombobulator(String path) {
+    PageTokenDiscombobulator(String path) {
         if (malformedPath(path)) {
             throw new IllegalArgumentException("Path [" + path + "] is malformed and so it can't be parsed");
         }

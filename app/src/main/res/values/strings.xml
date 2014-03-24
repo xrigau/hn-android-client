@@ -17,7 +17,7 @@
   <string name="fragment_news_details_tag">com.xrigau.hnandroid.FragmentNewsDetailsTag</string>
   <string name="share">Share</string>
   <string name="open_in_browser">Open in browser</string>
-  <string name="share_news_subject">Check out this news</string>
+  <string name="share_news_content">Check out this news: %1$s</string>
   <string name="refresh">Refresh</string>
 
 </resources>

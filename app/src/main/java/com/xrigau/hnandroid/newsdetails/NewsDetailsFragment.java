@@ -1,24 +1,29 @@
 package com.xrigau.hnandroid.newsdetails;
 
+import android.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.*;
 import android.widget.ImageView;
-import android.widget.ScrollView;
 import android.widget.ShareActionProvider;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.novoda.imageloader.NovodaImageLoader;
-import com.xrigau.hnandroid.HNFragment;
+import com.novoda.notils.logger.simple.Log;
 import com.xrigau.hnandroid.R;
 import com.xrigau.hnandroid.core.model.News;
-import com.xrigau.hnandroid.core.model.Summary;
-import com.xrigau.hnandroid.task.TaskListener;
-import com.xrigau.hnandroid.task.TaskResult;
+import com.xrigau.hnandroid.core.model.ParsedSummary;
 
-import static com.xrigau.hnandroid.core.task.TaskFactory.summaryTask;
+import rx.Observer;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 
-public class NewsDetailsFragment extends HNFragment implements TaskListener<Summary> {
+import static com.xrigau.hnandroid.task.TaskFactory.fetchSummary;
+import static com.xrigau.hnandroid.newsdetails.SummaryParser.parseSummary;
+import static com.xrigau.hnandroid.util.Navigator.navigate;
+
+public class NewsDetailsFragment extends Fragment {
 
     private static final String NEWS_KEY = "com.xrigau.hnandroid.NEWS_KEY";
 
@@ -51,8 +56,8 @@ public class NewsDetailsFragment extends HNFragment implements TaskListener<Summ
     private Intent getShareIntent() {
         return new Intent(Intent.ACTION_SEND)
                 .setType("text/plain")
-                .putExtra(Intent.EXTRA_SUBJECT, getString(R.string.share_news_subject))
-                .putExtra(Intent.EXTRA_TEXT, news.getTitle() + " – " + news.getUrl());
+                .putExtra(Intent.EXTRA_SUBJECT, news.getTitle())
+                .putExtra(Intent.EXTRA_TEXT, getString(R.string.share_news_content, news.getUrl()));
     }
 
     @Override
@@ -60,7 +65,7 @@ public class NewsDetailsFragment extends HNFragment implements TaskListener<Summ
         int id = item.getItemId();
         switch (id) {
             case R.id.browser:
-                navigate().toExternalAndroidBrowser(news.getUrl());
+                navigate(getActivity()).toExternalAndroidBrowser(news.getUrl());
                 return true;
         }
         return super.onOptionsItemSelected(item);
@@ -88,10 +93,8 @@ public class NewsDetailsFragment extends HNFragment implements TaskListener<Summ
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         restoreState(savedInstanceState);
-
-        startLoading();
-        getActivity().getActionBar().setTitle(news.getTitle());
-        execute(summaryTask(news.getUrl()));
+        showLoading();
+        loadSummary();
     }
 
     private void restoreState(Bundle savedInstanceState) {
@@ -102,58 +105,53 @@ public class NewsDetailsFragment extends HNFragment implements TaskListener<Summ
         }
     }
 
-    private void startLoading() {
+    private void loadSummary() {
+        fetchSummary(news.getUrl())
+                .flatMap(parseSummary())
+                .subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<ParsedSummary>() {
+                    @Override
+                    public void onNext(ParsedSummary summary) {
+                        displaySummary(summary);
+                    }
+
+                    @Override
+                    public void onCompleted() {
+                        hideLoading();
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        log("Error downloading news summary", e);
+                        hideLoading();
+                        toast(R.string.generic_error_oops);
+                    }
+                });
+    }
+
+    private void showLoading() {
         content.setVisibility(View.GONE);
         loading.setVisibility(View.VISIBLE);
     }
 
-    @Override
-    public void onLoadFinished(TaskResult<Summary> taskResult) {
-        finishLoading();
-        if (error(taskResult)) {
-            log(taskResult.error);
-            toast(R.string.generic_error_oops);
-            return;
-        }
-        Summary response = taskResult.result;
-        displaySummary(response);
-
-        resetScrollPositionBecauseSometimesItsWrongIfDataWasCached();
+    private void displaySummary(ParsedSummary response) {
+        new NovodaImageLoader.Builder(getActivity()).build().load(response.getImage(), image); // TODO Hide when no image available
+        title.setText(response.getTitle());
+        text.setText(response.getParsedMarkdown());
     }
 
-    private void finishLoading() {
+    private void hideLoading() {
         content.setVisibility(View.VISIBLE);
         loading.setVisibility(View.GONE);
     }
 
-    private boolean error(TaskResult taskResult) {
-        return taskResult.result == null && taskResult.error != null;
+    private void toast(int resourceId) {
+        Toast.makeText(getActivity(), resourceId, Toast.LENGTH_SHORT).show();
     }
 
-    private void displaySummary(Summary response) {
-        new NovodaImageLoader.Builder(getActivity()).build().load(response.getImage(), image);
-        title.setText(response.getTitle());
-        setUpMainText(response);
-    }
-
-    private void setUpMainText(Summary response) {
-        SummaryParser.from(response).into(text);
-    }
-
-    private void resetScrollPositionBecauseSometimesItsWrongIfDataWasCached() {
-        if (getView() == null || getView().getViewTreeObserver() == null) {
-            return;
-        }
-
-        final ScrollView scrollView = (ScrollView) getView().findViewById(R.id.scroll);
-        getView().getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
-            @Override
-            public boolean onPreDraw() {
-                getView().getViewTreeObserver().removeOnPreDrawListener(this);
-                scrollView.scrollTo(0, 0);
-                return true;
-            }
-        });
+    private void log(String message, Throwable error) {
+        Log.e(message, error);
     }
 
     @Override
