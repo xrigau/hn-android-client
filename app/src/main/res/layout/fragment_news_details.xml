@@ -38,10 +38,11 @@
         android:layout_height="@dimen/news_image_height" />
 
       <View
+        android:id="@+id/news_image_bottom_shadow"
         android:layout_width="match_parent"
         android:layout_height="12dp"
         android:layout_alignBottom="@id/image_placeholder"
-        android:background="@drawable/news_title_background" />
+        android:background="@drawable/news_image_bottom_shadow" />
 
       <com.xrigau.hnandroid.views.CustomFontTextView
         android:id="@+id/title"

@@ -3,6 +3,7 @@ package com.xrigau.hnandroid.newsdetails;
 import android.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.*;
 import android.widget.ImageView;
 import android.widget.ShareActionProvider;
@@ -10,6 +11,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.novoda.imageloader.NovodaImageLoader;
+import com.novoda.notils.caster.Views;
 import com.novoda.notils.logger.simple.Log;
 import com.xrigau.hnandroid.R;
 import com.xrigau.hnandroid.core.model.News;
@@ -19,8 +21,8 @@ import rx.Observer;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
-import static com.xrigau.hnandroid.task.TaskFactory.fetchSummary;
 import static com.xrigau.hnandroid.newsdetails.SummaryParser.parseSummary;
+import static com.xrigau.hnandroid.task.TaskFactory.fetchSummary;
 import static com.xrigau.hnandroid.util.Navigator.navigate;
 
 public class NewsDetailsFragment extends Fragment {
@@ -136,7 +138,16 @@ public class NewsDetailsFragment extends Fragment {
     }
 
     private void displaySummary(ParsedSummary response) {
-        new NovodaImageLoader.Builder(getActivity()).build().load(response.getImage(), image); // TODO Hide when no image available
+        if (TextUtils.isEmpty(response.getImage())) {
+            ((NewsDetailsActivity) getActivity()).removeImage();
+            content.setPadding(content.getPaddingLeft(), getResources().getDimensionPixelSize(R.dimen.action_bar_height) + getResources().getDimensionPixelSize(R.dimen.default_system_bar_height), content.getPaddingRight(), content.getPaddingBottom());
+            Views.findById(getView(), R.id.parallax_background_view).setVisibility(View.GONE);
+            Views.findById(getView(), R.id.image_placeholder).setVisibility(View.GONE);
+            Views.findById(getView(), R.id.news_image_bottom_shadow).setVisibility(View.GONE);
+        } else {
+            new NovodaImageLoader.Builder(getActivity()).build().load(response.getImage(), image);
+        }
+
         title.setText(response.getTitle());
         text.setText(response.getParsedMarkdown());
     }

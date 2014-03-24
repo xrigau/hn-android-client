@@ -47,4 +47,9 @@ class ActionBarFadeHelper implements ObservableScrollView.OnScrollChangedListene
         actionBarDrawable.setAlpha((int) (alpha * OPAQUE));
         systemBarTintOverlay.setAlpha(alpha);
     }
+
+    public void setMaxOpaqueActionBar() {
+        actionBarDrawable.setAlpha((int) (MAX_OPACITY * OPAQUE));
+        systemBarTintOverlay.setAlpha(MAX_OPACITY);
+    }
 }

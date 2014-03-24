@@ -3,7 +3,9 @@
 
   <dimen name="news_image_height">300dp</dimen>
   <dimen name="action_bar_height">48dip</dimen>
-  <dimen name="default_system_bar_height">25dp</dimen>
   <dimen name="news_top_shadow_height">40dp</dimen>
+
+  <!-- A bit hacky but will do for now to simplify the code-->
+  <dimen name="default_system_bar_height">0dp</dimen>
 
 </resources>

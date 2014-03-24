@@ -12,6 +12,7 @@ import com.xrigau.hnandroid.views.ObservableScrollView;
 public class NewsDetailsActivity extends Activity {
 
     public static final String EXTRA_NEWS = "com.xrigau.hnandroid.EXTRA_NEWS";
+    private ActionBarFadeHelper actionBarFadeHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,7 +27,7 @@ public class NewsDetailsActivity extends Activity {
         int imageHeight = getResources().getDimensionPixelSize(R.dimen.news_image_height);
         int actionBarHeight = getResources().getDimensionPixelSize(R.dimen.action_bar_height);
         int actionBarColor = getResources().getColor(R.color.action_bar_background);
-        ActionBarFadeHelper actionBarFadeHelper = new ActionBarFadeHelper(getActionBar(), systemBarTintOverlay, imageHeight, actionBarHeight, actionBarColor);
+        actionBarFadeHelper = new ActionBarFadeHelper(getActionBar(), systemBarTintOverlay, imageHeight, actionBarHeight, actionBarColor);
         ((ObservableScrollView) findViewById(R.id.scroll)).addOnScrollChangedListener(actionBarFadeHelper);
     }
 
@@ -37,5 +38,10 @@ public class NewsDetailsActivity extends Activity {
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    public void removeImage() {
+        ((ObservableScrollView) findViewById(R.id.scroll)).removeOnScrollChangedListener(actionBarFadeHelper);
+        actionBarFadeHelper.setMaxOpaqueActionBar();
     }
 }

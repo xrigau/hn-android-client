@@ -2,5 +2,6 @@
 <resources>
 
   <dimen name="news_top_shadow_height">70dp</dimen>
+  <dimen name="default_system_bar_height">25dp</dimen>
 
 </resources>

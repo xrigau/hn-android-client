@@ -25,6 +25,9 @@ android {
         testInstrumentationRunner "com.google.android.apps.common.testing.testrunner.GoogleInstrumentationTestRunner"
 
         buildConfigField "retrofit.client.Client", "HTTP_CLIENT", "new retrofit.client.UrlConnectionClient()"
+
+        versionCode 1414001
+        versionName "0.0.1"
     }
 
     productFlavors {

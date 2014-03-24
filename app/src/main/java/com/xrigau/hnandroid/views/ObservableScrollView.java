@@ -44,6 +44,10 @@ public class ObservableScrollView extends ScrollView {
         observers.add(onScrollChangedListener);
     }
 
+    public void removeOnScrollChangedListener(OnScrollChangedListener onScrollChangedListener) {
+        observers.remove(onScrollChangedListener);
+    }
+
     public static interface OnScrollChangedListener {
         public void onVerticalScrollChanged(int offsetY);
     }
